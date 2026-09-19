@@ -137,26 +137,10 @@
   try { localStorage.removeItem('medora-theme'); } catch (_) {}
   try { delete document.documentElement.dataset.medoraTheme; } catch (_) {}
 
-  const storageKey = 'medora-appearance';
-  const modes = [
-    { id: 'system', label: 'Sistem' },
-    { id: 'light', label: 'Luminos' },
-    { id: 'dark', label: 'Întunecat' }
-  ];
+  // The web stays light whatever the device asks for: the palette, the 3D icons and
+  // the screenshots are all drawn on paper, and a dark web page next to a light app
+  // reads as two products. The apps keep the switch, where someone chooses it.
+  document.documentElement.dataset.medoraAppearance = 'light';
+  try { localStorage.removeItem('medora-appearance'); } catch (_) {}
 
-  const validMode = id => modes.some(mode => mode.id === id) ? id : 'system';
-  const getSavedMode = () => {
-    try { return validMode(localStorage.getItem(storageKey)); }
-    catch (_) { return 'system'; }
-  };
-  const saveMode = id => {
-    try { localStorage.setItem(storageKey, id); }
-    catch (_) {}
-  };
-
-  const selected = validMode(document.documentElement.dataset.medoraAppearance || getSavedMode());
-  document.documentElement.dataset.medoraAppearance = selected;
-
-  // No appearance control in the web pages: the palette follows the system, and
-  // the switch lives in the app, where someone is already changing settings.
 })();
