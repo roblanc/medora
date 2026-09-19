@@ -1649,3 +1649,190 @@ body.medora-app .sidebar .nav button.line-sidebar__item.active {
   background: #edf5f0 !important;
   color: #246951 !important;
 }
+
+/* ==========================================================================
+   HeroUI Select & ListBox Component (@heroui/react)
+   <Select className="w-[256px]" placeholder="Select one">
+     <Label>State</Label>
+     <Select.Trigger>
+       <Select.Value />
+       <Select.Indicator />
+     </Select.Trigger>
+     <Select.Popover>
+       <ListBox>
+         <ListBox.Item id="..." textValue="...">
+           ...
+           <ListBox.ItemIndicator />
+         </ListBox.Item>
+       </ListBox>
+     </Select.Popover>
+   </Select>
+   ========================================================================== */
+.heroui-select {
+  position: relative !important;
+  display: inline-block !important;
+  user-select: none !important;
+}
+.heroui-select-trigger {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 8px !important;
+  height: 38px !important;
+  padding: 0 12px 0 10px !important;
+  background: #ffffff !important;
+  border: 1px solid #e4e4e7 !important;
+  border-radius: 10px !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04) !important;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+  font-size: 13px !important;
+  font-weight: 550 !important;
+  color: #18181b !important;
+  cursor: pointer !important;
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  outline: none !important;
+  box-sizing: border-box !important;
+}
+.heroui-select-trigger:hover {
+  background: #fafafa !important;
+  border-color: #d4d4d8 !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06) !important;
+}
+.heroui-select-trigger[aria-expanded="true"] {
+  border-color: #006fee !important;
+  box-shadow: 0 0 0 3px rgba(0, 111, 238, 0.15) !important;
+}
+.heroui-select-value {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 7px !important;
+  font-size: 13px !important;
+  font-weight: 550 !important;
+  color: #18181b !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+.heroui-select-indicator {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: #71717a !important;
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  margin-left: 2px !important;
+}
+.heroui-select-trigger[aria-expanded="true"] .heroui-select-indicator {
+  transform: rotate(180deg) !important;
+}
+
+/* Country Flag */
+.heroui-country-flag {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 20px !important;
+  height: 20px !important;
+  border-radius: 50% !important;
+  overflow: hidden !important;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1) !important;
+  flex-shrink: 0 !important;
+}
+.heroui-country-flag svg {
+  width: 100% !important;
+  height: 100% !important;
+  display: block !important;
+  border-radius: 50% !important;
+}
+
+/* Popover & ListBox */
+.heroui-select-popover {
+  position: absolute !important;
+  top: calc(100% + 6px) !important;
+  right: 0 !important;
+  min-width: 210px !important;
+  max-height: 340px !important;
+  background: #ffffff !important;
+  border: 1px solid #e4e4e7 !important;
+  border-radius: 14px !important;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.05) !important;
+  padding: 6px !important;
+  z-index: 1200 !important;
+  overflow-y: auto !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  transform: translateY(-6px) scale(0.98) !important;
+  transform-origin: top right !important;
+  transition: opacity 0.16s ease, transform 0.16s ease, visibility 0.16s !important;
+  pointer-events: none !important;
+}
+.heroui-select-popover.is-open {
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: translateY(0) scale(1) !important;
+  pointer-events: auto !important;
+}
+.heroui-select-popover-header {
+  font-size: 10.5px !important;
+  font-weight: 650 !important;
+  letter-spacing: 0.05em !important;
+  text-transform: uppercase !important;
+  color: #71717a !important;
+  padding: 6px 10px 4px 10px !important;
+  border-bottom: 1px solid #f4f4f5 !important;
+  margin-bottom: 4px !important;
+}
+.heroui-listbox {
+  list-style: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 2px !important;
+}
+.heroui-listbox-item {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 10px !important;
+  padding: 7px 10px !important;
+  border-radius: 8px !important;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  color: #27272a !important;
+  cursor: pointer !important;
+  transition: all 0.12s ease !important;
+  user-select: none !important;
+}
+.heroui-listbox-item:hover {
+  background: #f4f4f5 !important;
+  color: #09090b !important;
+}
+.heroui-listbox-item.is-selected {
+  background: #eff6ff !important;
+  color: #006fee !important;
+  font-weight: 600 !important;
+}
+.heroui-listbox-item-content {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 9px !important;
+}
+.heroui-listbox-item-text {
+  font-size: 13px !important;
+}
+.heroui-listbox-item-indicator {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 16px !important;
+  height: 16px !important;
+  color: #006fee !important;
+  opacity: 0 !important;
+  transform: scale(0.8) !important;
+  transition: opacity 0.12s ease, transform 0.12s ease !important;
+}
+.heroui-listbox-item.is-selected .heroui-listbox-item-indicator {
+  opacity: 1 !important;
+  transform: scale(1) !important;
+}

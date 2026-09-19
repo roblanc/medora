@@ -105,6 +105,214 @@
     </svg>`;
   };
 
+
+  // ==========================================================================
+  // HeroUI Country Select System (@heroui/react)
+  // <Select><Select.Trigger><Select.Value /><Select.Indicator /></Select.Trigger>
+  // <Select.Popover><ListBox><ListBox.Item><ListBox.ItemIndicator /></ListBox.Item></ListBox></Select.Popover></Select>
+  // ==========================================================================
+  window.MEDORA_COUNTRIES = [
+    {
+      id: 'ro', name: 'România', code: 'RO',
+      flag: '<svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="24" fill="#fcd116"/><rect width="16" height="48" x="0" fill="#002b7f"/><rect width="16" height="48" x="32" fill="#ce1126"/></svg>'
+    },
+    {
+      id: 'de', name: 'Germania', code: 'DE',
+      flag: '<svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="24" fill="#dd0000"/><rect width="48" height="16" y="0" fill="#000000"/><rect width="48" height="16" y="32" fill="#ffce00"/></svg>'
+    },
+    {
+      id: 'fr', name: 'Franța', code: 'FR',
+      flag: '<svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="24" fill="#ffffff"/><rect width="16" height="48" x="0" fill="#002654"/><rect width="16" height="48" x="32" fill="#ed2939"/></svg>'
+    },
+    {
+      id: 'it', name: 'Italia', code: 'IT',
+      flag: '<svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="24" fill="#ffffff"/><rect width="16" height="48" x="0" fill="#009246"/><rect width="16" height="48" x="32" fill="#ce2b37"/></svg>'
+    },
+    {
+      id: 'es', name: 'Spania', code: 'ES',
+      flag: '<svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="24" fill="#f1bf00"/><rect width="48" height="12" y="0" fill="#aa151b"/><rect width="48" height="12" y="36" fill="#aa151b"/><circle cx="16" cy="24" r="4.5" fill="#aa151b" opacity="0.9"/></svg>'
+    },
+    {
+      id: 'cz', name: 'Cehia', code: 'CZ',
+      flag: '<svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="24" fill="#d7141a"/><rect width="48" height="24" y="0" fill="#ffffff"/><polygon points="0,0 24,24 0,48" fill="#11457e"/></svg>'
+    },
+    {
+      id: 'hu', name: 'Ungaria', code: 'HU',
+      flag: '<svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="24" fill="#ffffff"/><rect width="48" height="16" y="0" fill="#ce2939"/><rect width="48" height="16" y="32" fill="#477050"/></svg>'
+    },
+    {
+      id: 'pl', name: 'Polonia', code: 'PL',
+      flag: '<svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="24" fill="#dc143c"/><rect width="48" height="24" y="0" fill="#ffffff"/></svg>'
+    },
+    {
+      id: 'gr', name: 'Grecia', code: 'GR',
+      flag: '<svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="24" fill="#0d5eaf"/><rect width="48" height="5.33" y="5.33" fill="#fff"/><rect width="48" height="5.33" y="16" fill="#fff"/><rect width="48" height="5.33" y="26.66" fill="#fff"/><rect width="48" height="5.33" y="37.33" fill="#fff"/><rect width="21.33" height="21.33" fill="#0d5eaf"/><rect width="21.33" height="4.5" y="8.4" fill="#fff"/><rect width="4.5" height="21.33" x="8.4" fill="#fff"/></svg>'
+    },
+    {
+      id: 'bg', name: 'Bulgaria', code: 'BG',
+      flag: '<svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="24" fill="#00966e"/><rect width="48" height="16" y="0" fill="#ffffff"/><rect width="48" height="16" y="32" fill="#d62612"/></svg>'
+    },
+    {
+      id: 'hr', name: 'Croația', code: 'HR',
+      flag: '<svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="24" fill="#ffffff"/><rect width="48" height="16" y="0" fill="#ff0000"/><rect width="48" height="16" y="32" fill="#171796"/></svg>'
+    },
+    {
+      id: 'rs', name: 'Serbia', code: 'RS',
+      flag: '<svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="24" fill="#0c4076"/><rect width="48" height="16" y="0" fill="#c6363c"/><rect width="48" height="16" y="32" fill="#ffffff"/></svg>'
+    },
+    {
+      id: 'si', name: 'Slovenia', code: 'SI',
+      flag: '<svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="24" fill="#005ce6"/><rect width="48" height="16" y="0" fill="#ffffff"/><rect width="48" height="16" y="32" fill="#ed1c24"/></svg>'
+    },
+    {
+      id: 'sk', name: 'Slovacia', code: 'SK',
+      flag: '<svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="24" fill="#0b4ea2"/><rect width="48" height="16" y="0" fill="#ffffff"/><rect width="48" height="16" y="32" fill="#ee1c25"/></svg>'
+    }
+  ];
+
+  window.getSelectedCountry = function() {
+    let saved = 'ro';
+    try { saved = localStorage.getItem('medora_country') || 'ro'; } catch (_) {}
+    return window.MEDORA_COUNTRIES.find(c => c.id === saved) || window.MEDORA_COUNTRIES[0];
+  };
+
+  window.setSelectedCountry = function(countryId) {
+    const country = window.MEDORA_COUNTRIES.find(c => c.id === countryId) || window.MEDORA_COUNTRIES[0];
+    try { localStorage.setItem('medora_country', country.id); } catch (_) {}
+    
+    // Update any select trigger in DOM
+    document.querySelectorAll('.heroui-select[data-type="country"]').forEach(selectEl => {
+      const flagEl = selectEl.querySelector('.heroui-selected-flag');
+      const nameEl = selectEl.querySelector('.heroui-selected-name');
+      if (flagEl) flagEl.innerHTML = country.flag;
+      if (nameEl) nameEl.textContent = country.name;
+
+      selectEl.querySelectorAll('.heroui-listbox-item').forEach(item => {
+        const isMatch = item.dataset.id === country.id;
+        item.classList.toggle('is-selected', isMatch);
+        item.setAttribute('aria-selected', isMatch ? 'true' : 'false');
+      });
+    });
+
+    // Sync medora.html sidebar country widget if present
+    const sidebarCountry = document.querySelector('.sidebar-bottom .country');
+    if (sidebarCountry) {
+      const codeEl = sidebarCountry.querySelector('.country-code');
+      const textEl = sidebarCountry.querySelector('div');
+      if (codeEl) codeEl.textContent = country.code;
+      if (textEl) textEl.innerHTML = country.name + '<small>Piață activă · Nomenclator ' + country.code + '</small>';
+    }
+
+    // Sync index.html network grid active cards if present
+    document.querySelectorAll('.network-card').forEach(card => {
+      const countryNameEl = card.querySelector('.network-country-name');
+      if (countryNameEl) {
+        const matches = countryNameEl.textContent.trim().toLowerCase() === country.name.toLowerCase();
+        card.classList.toggle('is-active-market', matches);
+      }
+    });
+
+    window.dispatchEvent(new CustomEvent('medora:country-change', { detail: country }));
+  };
+
+  window.initHeroUICountrySelect = function(container) {
+    if (!container) return;
+    const current = window.getSelectedCountry();
+
+    container.innerHTML = `
+      <div class="heroui-select" data-type="country">
+        <button type="button" class="heroui-select-trigger" aria-haspopup="listbox" aria-expanded="false" title="Alege piața națională">
+          <span class="heroui-select-value">
+            <span class="heroui-country-flag heroui-selected-flag">${current.flag}</span>
+            <span class="heroui-country-name heroui-selected-name">${current.name}</span>
+          </span>
+          <span class="heroui-select-indicator" aria-hidden="true">
+            <svg viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m4 6 4 4 4-4"/></svg>
+          </span>
+        </button>
+        <div class="heroui-select-popover" role="dialog" aria-hidden="true">
+          <div class="heroui-select-popover-header">Alege piața oficială</div>
+          <ul class="heroui-listbox" role="listbox" aria-label="Alege țara">
+            ${window.MEDORA_COUNTRIES.map(c => `
+              <li class="heroui-listbox-item ${c.id === current.id ? 'is-selected' : ''}" role="option" data-id="${c.id}" data-name="${c.name}" aria-selected="${c.id === current.id ? 'true' : 'false'}">
+                <span class="heroui-listbox-item-content">
+                  <span class="heroui-country-flag">${c.flag}</span>
+                  <span class="heroui-listbox-item-text">${c.name}</span>
+                </span>
+                <span class="heroui-listbox-item-indicator" aria-hidden="true">
+                  <svg viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 8.5 6.5 11.5 12.5 4.5"/></svg>
+                </span>
+              </li>
+            `).join('')}
+          </ul>
+        </div>
+      </div>
+    `;
+
+    const selectEl = container.querySelector('.heroui-select');
+    const trigger = selectEl.querySelector('.heroui-select-trigger');
+    const popover = selectEl.querySelector('.heroui-select-popover');
+
+    const togglePopover = (open) => {
+      const willOpen = open !== undefined ? open : !popover.classList.contains('is-open');
+      popover.classList.toggle('is-open', willOpen);
+      trigger.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+      popover.setAttribute('aria-hidden', willOpen ? 'false' : 'true');
+    };
+
+    trigger.onclick = (e) => {
+      e.stopPropagation();
+      // Close other selects if open
+      document.querySelectorAll('.heroui-select-popover.is-open').forEach(p => {
+        if (p !== popover) {
+          p.classList.remove('is-open');
+          const t = p.closest('.heroui-select')?.querySelector('.heroui-select-trigger');
+          if (t) t.setAttribute('aria-expanded', 'false');
+        }
+      });
+      togglePopover();
+    };
+
+    selectEl.querySelectorAll('.heroui-listbox-item').forEach(item => {
+      item.onclick = (e) => {
+        e.stopPropagation();
+        const cid = item.dataset.id;
+        window.setSelectedCountry(cid);
+        togglePopover(false);
+      };
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!selectEl.contains(e.target)) {
+        togglePopover(false);
+      }
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && popover.classList.contains('is-open')) {
+        togglePopover(false);
+      }
+    });
+  };
+
+  // Auto-init on page load
+  const autoInitCountrySelects = () => {
+    document.querySelectorAll('[data-heroui-country-select]').forEach(el => {
+      if (!el.hasAttribute('data-initialized')) {
+        el.setAttribute('data-initialized', 'true');
+        window.initHeroUICountrySelect(el);
+      }
+    });
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', autoInitCountrySelects);
+  } else {
+    autoInitCountrySelects();
+    window.setSelectedCountry(window.getSelectedCountry().id);
+  }
+
+
   // Appearance follows iOS: system default, with light/dark override.
   // The old 7-palette picker (medora-theme) is retired — the brand is locked,
   // so any stored palette resolves to the same tokens and is cleaned up.
