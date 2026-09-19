@@ -832,3 +832,534 @@ body.medora-app .modalbody {
   overscroll-behavior: contain !important;
   -webkit-overflow-scrolling: touch !important;
 }
+
+/* ========================================================
+   MODERN UNTITLED UI TABLE SYSTEM (Table02DividerLine)
+   ======================================================== */
+
+.table-card-root {
+  background: #ffffff !important;
+  border: 1px solid #eaecf0 !important;
+  border-radius: 14px !important;
+  box-shadow: 0 1px 3px rgba(16, 24, 40, 0.05), 0 1px 2px rgba(16, 24, 40, 0.03) !important;
+  overflow: hidden !important;
+  margin-bottom: 24px !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+/* Table Card Header */
+.table-card-header {
+  padding: 20px 24px 18px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 16px !important;
+  border-bottom: 1px solid #eaecf0 !important;
+  background: #ffffff !important;
+  flex-wrap: wrap !important;
+}
+.table-card-title-group {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  margin-bottom: 4px !important;
+}
+.table-card-title {
+  margin: 0 !important;
+  font-size: 18px !important;
+  font-weight: 700 !important;
+  color: #101828 !important;
+  letter-spacing: -0.02em !important;
+  line-height: 1.2 !important;
+}
+.badge-count {
+  display: inline-flex !important;
+  align-items: center !important;
+  padding: 3px 10px !important;
+  border-radius: 9999px !important;
+  background: #f2f4f7 !important;
+  color: #344054 !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  line-height: 1.3 !important;
+}
+.table-card-desc {
+  margin: 0 !important;
+  font-size: 13.5px !important;
+  color: #475467 !important;
+  line-height: 1.45 !important;
+}
+.table-card-header-trailing {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+}
+
+/* Inline Search Box in Table Header */
+.table-search-box {
+  display: flex !important;
+  align-items: center !important;
+  gap: 9px !important;
+  height: 40px !important;
+  padding: 0 14px !important;
+  background: #f9fafb !important;
+  border: 1px solid #d0d5dd !important;
+  border-radius: 8px !important;
+  width: 270px !important;
+  transition: all .2s ease !important;
+  box-sizing: border-box !important;
+}
+.table-search-box:focus-within {
+  background: #ffffff !important;
+  border-color: #704fe6 !important;
+  box-shadow: 0 0 0 3px rgba(112, 79, 230, 0.12) !important;
+  width: 310px !important;
+}
+.table-search-box .ph {
+  color: #667085 !important;
+  font-size: 17px !important;
+  flex-shrink: 0 !important;
+}
+.table-search-box input {
+  border: 0 !important;
+  outline: 0 !important;
+  background: transparent !important;
+  font-family: inherit !important;
+  font-size: 13.5px !important;
+  color: #101828 !important;
+  width: 100% !important;
+  padding: 0 !important;
+}
+.table-search-box input::placeholder {
+  color: #98a2b3 !important;
+}
+.search-kbd {
+  font-size: 10.5px !important;
+  font-family: "JetBrains Mono", monospace !important;
+  background: #ffffff !important;
+  border: 1px solid #d0d5dd !important;
+  border-radius: 4px !important;
+  padding: 2px 6px !important;
+  color: #667085 !important;
+}
+
+.table-dropdown-trigger {
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 8px !important;
+  border: 1px solid #d0d5dd !important;
+  background: #ffffff !important;
+  color: #667085 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  transition: all .15s ease !important;
+}
+.table-dropdown-trigger:hover {
+  background: #f9fafb !important;
+  color: #101828 !important;
+  border-color: #98a2b3 !important;
+}
+
+/* Table Scroll & Modern Table */
+.table-scroll-container {
+  width: 100% !important;
+  overflow-x: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+}
+.modern-table {
+  width: 100% !important;
+  border-collapse: separate !important;
+  border-spacing: 0 !important;
+  text-align: left !important;
+  font-size: 13.5px !important;
+  background: #ffffff !important;
+  border: none !important;
+}
+.modern-table thead {
+  background: #f9fafb !important;
+}
+.modern-table th {
+  padding: 13px 20px !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  color: #475467 !important;
+  letter-spacing: 0.02em !important;
+  border-top: none !important;
+  border-bottom: 1px solid #eaecf0 !important;
+  border-left: none !important;
+  border-right: none !important;
+  background: #f9fafb !important;
+  white-space: nowrap !important;
+  user-select: none !important;
+}
+.modern-table th.th-sortable {
+  cursor: pointer !important;
+  transition: background .15s ease, color .15s ease !important;
+}
+.modern-table th.th-sortable:hover {
+  background: #f2f4f7 !important;
+  color: #101828 !important;
+}
+.th-content {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+}
+.sort-icon {
+  font-size: 13px !important;
+  color: #98a2b3 !important;
+  transition: transform .15s ease, color .15s ease !important;
+}
+.th-sortable:hover .sort-icon {
+  color: #475467 !important;
+}
+
+/* Table Rows & Cells */
+.modern-table tbody tr {
+  border-bottom: 1px solid #eaecf0 !important;
+  transition: background-color .15s ease !important;
+}
+.modern-table tbody tr:hover {
+  background-color: #f9fafb !important;
+}
+.modern-table tbody tr.is-selected {
+  background-color: #f4f3ff !important;
+}
+.modern-table td {
+  padding: 14px 20px !important;
+  vertical-align: middle !important;
+  border-top: none !important;
+  border-bottom: 1px solid #f2f4f7 !important;
+  border-left: none !important;
+  border-right: none !important;
+  background: transparent !important;
+  color: #101828 !important;
+}
+
+/* Custom Checkbox */
+.ui-checkbox-wrap {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+}
+.ui-checkbox {
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  width: 18px !important;
+  height: 18px !important;
+  border: 1.5px solid #d0d5dd !important;
+  border-radius: 5px !important;
+  background: #ffffff !important;
+  cursor: pointer !important;
+  position: relative !important;
+  transition: all .15s ease !important;
+  margin: 0 !important;
+}
+.ui-checkbox:checked {
+  background: #704fe6 !important;
+  border-color: #704fe6 !important;
+}
+.ui-checkbox:checked::after {
+  content: "" !important;
+  position: absolute !important;
+  left: 5px !important;
+  top: 2px !important;
+  width: 4px !important;
+  height: 8px !important;
+  border: solid #ffffff !important;
+  border-width: 0 2px 2px 0 !important;
+  transform: rotate(45deg) !important;
+}
+
+/* Cell Drug / Avatar Group */
+.cell-drug-group {
+  display: flex !important;
+  align-items: center !important;
+  gap: 14px !important;
+  min-width: 220px !important;
+}
+.drug-avatar {
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 10px !important;
+  background: #f4f5f6 !important;
+  border: 1px solid #eaecf0 !important;
+  display: grid !important;
+  place-items: center !important;
+  flex-shrink: 0 !important;
+}
+.drug-avatar img {
+  width: 26px !important;
+  height: 26px !important;
+  object-fit: contain !important;
+}
+.drug-avatar.avatar-warning {
+  background: #fffbeb !important;
+  border-color: #fde68a !important;
+}
+.drug-avatar.avatar-danger {
+  background: #fef2f2 !important;
+  border-color: #fecaca !important;
+}
+.drug-avatar.avatar-success {
+  background: #f0fdf4 !important;
+  border-color: #bbf7d0 !important;
+}
+.drug-info-text {
+  display: flex !important;
+  flex-direction: column !important;
+}
+.table-drug-title {
+  font-family: inherit !important;
+  font-size: 14px !important;
+  font-weight: 650 !important;
+  color: #101828 !important;
+  text-align: left !important;
+  border: 0 !important;
+  background: transparent !important;
+  padding: 0 !important;
+  cursor: pointer !important;
+  line-height: 1.3 !important;
+  transition: color .15s ease !important;
+}
+.table-drug-title:hover {
+  color: #704fe6 !important;
+  text-decoration: underline !important;
+}
+.table-drug-sub {
+  font-size: 12.5px !important;
+  color: #667085 !important;
+  margin-top: 2px !important;
+}
+
+/* BadgeWithDot (from Prompt: BadgeWithDot size="sm") */
+.badge-dot {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  padding: 3px 10px !important;
+  border-radius: 9999px !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  line-height: 1.4 !important;
+  white-space: nowrap !important;
+}
+.badge-dot-bullet {
+  width: 6px !important;
+  height: 6px !important;
+  border-radius: 50% !important;
+  flex-shrink: 0 !important;
+}
+/* Success */
+.badge-dot-success {
+  background: #ecfdf3 !important;
+  color: #027a48 !important;
+  border: 1px solid #a6f4c5 !important;
+}
+.badge-dot-success .badge-dot-bullet {
+  background: #12b76a !important;
+}
+/* Warning / Temporary */
+.badge-dot-warning {
+  background: #fffaeb !important;
+  color: #b54708 !important;
+  border: 1px solid #fedf89 !important;
+}
+.badge-dot-warning .badge-dot-bullet {
+  background: #f79009 !important;
+}
+/* Danger / Permanent */
+.badge-dot-danger {
+  background: #fef3f2 !important;
+  color: #b42318 !important;
+  border: 1px solid #fecdca !important;
+}
+.badge-dot-danger .badge-dot-bullet {
+  background: #f04438 !important;
+}
+/* Gray / Monitored */
+.badge-dot-gray {
+  background: #f8f9fa !important;
+  color: #344054 !important;
+  border: 1px solid #eaecf0 !important;
+}
+.badge-dot-gray .badge-dot-bullet {
+  background: #667085 !important;
+}
+
+/* Meta / About Cell */
+.cell-meta-group {
+  display: flex !important;
+  flex-direction: column !important;
+  min-width: 170px !important;
+}
+.table-meta-title {
+  margin: 0 0 3px !important;
+  font-size: 13.5px !important;
+  font-weight: 550 !important;
+  color: #101828 !important;
+}
+.table-meta-sub {
+  margin: 0 !important;
+  font-size: 12px !important;
+  color: #667085 !important;
+}
+.table-atc-pill {
+  font-family: "JetBrains Mono", monospace !important;
+  font-size: 11px !important;
+  background: #f2f4f7 !important;
+  color: #344054 !important;
+  padding: 2px 7px !important;
+  border-radius: 4px !important;
+  display: inline-block !important;
+}
+
+/* ProgressBar (from Prompt: <ProgressBar labelPosition="right" value={item.licenseUse} />) */
+.table-progress-container {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  min-width: 140px !important;
+}
+.table-progress-track {
+  flex: 1 !important;
+  height: 8px !important;
+  border-radius: 9999px !important;
+  background: #eaecf0 !important;
+  overflow: hidden !important;
+}
+.table-progress-bar {
+  height: 100% !important;
+  border-radius: 9999px !important;
+  transition: width .3s ease !important;
+}
+.progress-success {
+  background: #12b76a !important;
+}
+.progress-warning {
+  background: #f79009 !important;
+}
+.progress-danger {
+  background: #f04438 !important;
+}
+.progress-default {
+  background: #704fe6 !important;
+}
+.table-progress-text {
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  color: #344054 !important;
+  white-space: nowrap !important;
+}
+
+/* Action Buttons & DropdownIconSimple */
+.cell-actions-group {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  gap: 8px !important;
+}
+.btn-table-action {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  padding: 6px 12px !important;
+  border-radius: 8px !important;
+  border: 1px solid #d0d5dd !important;
+  background: #ffffff !important;
+  color: #344054 !important;
+  font-size: 12.5px !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  transition: all .15s ease !important;
+}
+.btn-table-action:hover {
+  background: #f9fafb !important;
+  border-color: #98a2b3 !important;
+}
+.btn-table-action.followed {
+  background: #edfdf2 !important;
+  border-color: #a6f4c5 !important;
+  color: #027a48 !important;
+}
+.btn-table-more {
+  width: 34px !important;
+  height: 34px !important;
+  border-radius: 8px !important;
+  border: 1px solid transparent !important;
+  background: transparent !important;
+  color: #667085 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  transition: all .15s ease !important;
+}
+.btn-table-more:hover {
+  background: #f2f4f7 !important;
+  border-color: #eaecf0 !important;
+  color: #101828 !important;
+}
+
+/* Table Card Footer */
+.table-card-footer {
+  padding: 14px 24px !important;
+  border-top: 1px solid #eaecf0 !important;
+  background: #ffffff !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  font-size: 13px !important;
+  color: #475467 !important;
+}
+.table-footer-pagination {
+  display: flex !important;
+  gap: 8px !important;
+}
+.btn-pagination {
+  padding: 6px 14px !important;
+  border-radius: 8px !important;
+  border: 1px solid #d0d5dd !important;
+  background: #ffffff !important;
+  font-size: 12.5px !important;
+  font-weight: 600 !important;
+  color: #344054 !important;
+  cursor: pointer !important;
+  transition: all .15s ease !important;
+}
+.btn-pagination:hover:not(:disabled) {
+  background: #f9fafb !important;
+  border-color: #98a2b3 !important;
+}
+.btn-pagination:disabled {
+  opacity: 0.5 !important;
+  cursor: not-allowed !important;
+}
+
+/* Modal compare table update */
+dialog .tablewrap table {
+  border-collapse: separate !important;
+  border-spacing: 0 !important;
+  border: 1px solid #eaecf0 !important;
+  border-radius: 12px !important;
+  overflow: hidden !important;
+  width: 100% !important;
+}
+dialog .tablewrap th {
+  background: #f9fafb !important;
+  color: #475467 !important;
+  font-size: 12.5px !important;
+  padding: 12px 18px !important;
+  border-bottom: 1px solid #eaecf0 !important;
+  border-top: none !important;
+}
+dialog .tablewrap td {
+  padding: 12px 18px !important;
+  border-bottom: 1px solid #f2f4f7 !important;
+  border-top: none !important;
+  font-size: 13.5px !important;
+}

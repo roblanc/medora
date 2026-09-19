@@ -315,7 +315,7 @@ dialog:not([open]) {
 }
 
 </style>
-<link rel="stylesheet" href="theme.css?v=10">
+<link rel="stylesheet" href="theme.css?v=11">
 <link rel="stylesheet" href="anti-slop.css?v=2">
 <script src="theme.js?v=10" defer></script>
 </head><body class="medora-app">
@@ -360,7 +360,49 @@ drugs.forEach(d => liveDrugsCache.set(d.id, d));
 const get = id => liveDrugsCache.get(id) || drugs.find(d => d.id === id) || {id: id, name: id, dci: 'Substanță activă', strength: '', form: '', atc: '', status: 'unknown'};const normal=s=>s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
 function save(key,v){try{localStorage.setItem(key,JSON.stringify(v))}catch{toast('Stocare locală indisponibilă în acest browser.')}}
 function toast(s){$('#toast').textContent=s;$('#toast').classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('#toast').classList.remove('show'),3000)}
-const badge=d=>`<span class="pill ${d.status==='permanent'?'red':d.status==='resumed'?'green':''}">${({temporary:'Temporară · demo',permanent:'Permanentă · demo',resumed:'Reluată · demo',unknown:'Statut necunoscut'})[d.status]}</span>`;
+let sortDescriptor = { column: "name", direction: "ascending" };
+let lastCatalogList = [];
+
+function sortDrugList(list) {
+  return [...list].sort((a, b) => {
+    let first, second;
+    if (sortDescriptor.column === "name") {
+      first = a.name || "";
+      second = b.name || "";
+    } else if (sortDescriptor.column === "status") {
+      first = a.status || "";
+      second = b.status || "";
+    } else if (sortDescriptor.column === "form") {
+      first = (a.form || "") + " " + (a.atc || "");
+      second = (b.form || "") + " " + (b.atc || "");
+    } else if (sortDescriptor.column === "stock") {
+      const getScore = d => d.status === "resumed" ? 95 : d.status === "temporary" ? 30 : d.status === "permanent" ? 5 : 80;
+      first = getScore(a);
+      second = getScore(b);
+      return sortDescriptor.direction === "descending" ? second - first : first - second;
+    } else {
+      first = a[sortDescriptor.column] || "";
+      second = b[sortDescriptor.column] || "";
+    }
+
+    if (typeof first === "number" && typeof second === "number") {
+      return sortDescriptor.direction === "descending" ? second - first : first - second;
+    }
+    let cmp = String(first).localeCompare(String(second), "ro", { sensitivity: "base" });
+    return sortDescriptor.direction === "descending" ? -cmp : cmp;
+  });
+}
+
+const badge = d => {
+  const type = d.status === "resumed" ? "success" : d.status === "temporary" ? "warning" : d.status === "permanent" ? "danger" : "gray";
+  const label = {
+    temporary: "Discontinuitate temp.",
+    permanent: "Permanentă · Deficit",
+    resumed: "Disponibil",
+    unknown: "Statut necunoscut"
+  }[d.status] || "Monitorizat";
+  return `<span class="badge-dot badge-dot-${type}"><span class="badge-dot-bullet"></span><span class="badge-dot-text">${label}</span></span>`;
+};
 const footer=()=>`<footer class="footer"><span>Medora · Concept independent pentru profesioniști</span><span>Produse și evenimente fictive. Fără utilizare clinică. &nbsp; <a href="#sources">Despre date ↗</a></span></footer>`;
 const head=(title,sub,button='')=>`<div class="heading"><div><div class="eyebrow">SPAȚIUL TĂU CLINIC / ROMÂNIA</div><h1>${title}</h1><p class="sub">${sub}</p></div>${button}</div>`;
 function render(){document.querySelectorAll('[data-page]').forEach(b=>b.classList.toggle('active',b.dataset.page===page));$('#navcount').textContent=followed.length;const pageLabels = {overview:'Acasă',home:'Acasă',catalog:'Medicamente',interactions:'Interacțiuni',availability:'Disponibilitate',radar:'Disponibilitate',tools:'Instrumente',atc:'Clasificare ATC',icd10:'Clasificare ICD-10',watch:'Lista mea',sources:'Surse & transparență'};
@@ -403,33 +445,193 @@ function overview(){return head('Acasă','Medicamente urmărite, schimbări de d
     <small>Coduri diagnostic</small>
   </div>
 </div><div class="stats" aria-label="Rezumat operațional"><div class="stat"><img class="stat-spot" src="spot-icons/watchlist.png" alt="" aria-hidden="true"><div><strong>${followed.length}</strong><div class="metriclabel">Sub observație</div><small>prezentări urmărite</small></div></div><div class="stat"><img class="stat-spot" src="spot-icons/compare.png" alt="" aria-hidden="true"><div><strong>${drugs.filter(d=>d.status==='temporary'||d.status==='permanent').length}</strong><div class="metriclabel">Întreruperi active</div><small>temporare sau permanente</small></div></div><div class="stat"><img class="stat-spot" src="spot-icons/sources.png" alt="" aria-hidden="true"><div><strong>1</strong><div class="metriclabel">Revenire anunțată</div><small>în așteptarea confirmării</small></div></div></div><div class="lower-grid"><section><div class="section-head"><h2>Jurnal de schimbări</h2><button class="linkbutton" data-go="radar">Vezi jurnalul complet ${icon('arrow')}</button></div><div class="panel"><div class="filters">${chips()}</div><div id="alerts">${alertrows(drugs.filter(d=>d.event&&(filter==='all'||d.status===filter)))}</div></div></section><section><div class="section-head"><h2>Lista de urmărire</h2><button class="linkbutton" data-go="watch">Gestionează lista ${icon('arrow')}</button></div><div class="panel">${watchrows()}<button class="addwatch" data-go="catalog">Adaugă un medicament</button></div><div class="source-note">${icon('shield')}<span>Fiecare schimbare trebuie legată de documentul original, data publicării și istoricul verificărilor. Datele curente sunt fictive.</span></div></section></div>`}
-function catalog(){return head('Medicamente','Caută în nomenclatorul oficial ANMDMR (peste 8.150 de produse active) și compară prezentări.')+`<div class="searchbox catalog-search">${icon('search')}<input id="catalog-query" aria-label="Caută în catalog" placeholder="Denumire, DCI, ATC sau specialitate"></div><div class="panel tablewrap catalog-tablewrap"><table class="catalog-table"><thead><tr><th>Compară</th><th>Medicament / DCI</th><th>Formă / cod ATC</th><th>Disponibilitate</th><th>Urmărire</th></tr></thead><tbody id="catalog-rows"></tbody></table></div><div id="compare-bar-wrap"></div><p class="source-note">Numele comerciale și statusurile sunt fictive. Aceeași DCI nu garantează substituția clinică.</p>`}
-function tableRows(list){return list.length?list.map(d=>`<tr class="catalog-row ${selected.includes(d.id)?'is-selected':''}"><td class="col-select"><label class="compare-opt" title="Compară ${d.name}"><input class="tick" type="checkbox" data-select="${d.id}" aria-label="Compară ${d.name}" ${selected.includes(d.id)?'checked':''}><span class="compare-label">Compară</span></label></td><td class="col-drug"><button class="plain drug-title" data-detail="${d.id}">${d.name} ${d.strength}</button><small class="drug-dci">${d.dci}</small></td><td class="col-meta"><span class="meta-form">${d.form}</span><span class="meta-separator">·</span><small class="meta-atc">ATC: ${d.atc}</small></td><td class="col-status">${badge(d)}</td><td class="col-action"><button class="btn small btn-follow ${followed.includes(d.id)?'followed':''}" data-follow="${d.id}" aria-pressed="${followed.includes(d.id)}">${icon(followed.includes(d.id)?'check':'plus')}<span>${followed.includes(d.id)?'Urmărit':'Urmărește'}</span></button></td></tr>`).join(''):'<tr class="catalog-row-empty"><td colspan="5"><div class="empty">Niciun rezultat în catalogul demo. Încearcă „amoxi” sau „metformină”.</div></td></tr>'}
+function catalog() {
+  return head("Medicamente", "Caută în nomenclatorul oficial ANMDMR (peste 8.150 de produse active) și compară prezentări.") + `
+  <div class="table-card-root">
+    <div class="table-card-header">
+      <div class="table-card-header-main">
+        <div class="table-card-title-group">
+          <h2 class="table-card-title">Nomenclator Medicamente</h2>
+          <span class="badge-count" id="table-count-badge">8.150 active</span>
+        </div>
+        <p class="table-card-desc">Sincronizat zilnic cu registrele ANMDMR, EMA și Nomenclatorul Național CNAS.</p>
+      </div>
+      <div class="table-card-header-trailing">
+        <div class="table-search-box">
+          <i class="ph ph-magnifying-glass"></i>
+          <input id="catalog-query" aria-label="Caută în catalog" placeholder="Caută denumire, DCI, cod ATC..." autocomplete="off">
+          <span class="search-kbd">↵</span>
+        </div>
+        <button class="table-dropdown-trigger" id="table-options-btn" aria-label="Opțiuni tabel" title="Opțiuni de vizualizare și export">
+          <i class="ph ph-dots-three-vertical"></i>
+        </button>
+      </div>
+    </div>
+
+    <div class="table-scroll-container">
+      <table class="modern-table catalog-table" aria-label="Nomenclator Medicamente">
+        <thead>
+          <tr>
+            <th class="th-select" style="width: 44px; padding-left: 20px;">
+              <label class="ui-checkbox-wrap" title="Selectează tot">
+                <input type="checkbox" id="select-all-checkbox" class="ui-checkbox" aria-label="Selectează toate medicamentele">
+              </label>
+            </th>
+            <th class="th-sortable" data-sort="name">
+              <div class="th-content">
+                <span>Medicament / DCI</span>
+                <i class="ph ${sortDescriptor.column === "name" ? (sortDescriptor.direction === "ascending" ? "ph-arrow-up" : "ph-arrow-down") : "ph-arrows-down-up"} sort-icon"></i>
+              </div>
+            </th>
+            <th class="th-sortable" data-sort="status">
+              <div class="th-content">
+                <span>Status</span>
+                <i class="ph ${sortDescriptor.column === "status" ? (sortDescriptor.direction === "ascending" ? "ph-arrow-up" : "ph-arrow-down") : "ph-arrows-down-up"} sort-icon"></i>
+              </div>
+            </th>
+            <th class="th-sortable" data-sort="form">
+              <div class="th-content">
+                <span>Formă & Clasificare ATC</span>
+                <i class="ph ${sortDescriptor.column === "form" ? (sortDescriptor.direction === "ascending" ? "ph-arrow-up" : "ph-arrow-down") : "ph-arrows-down-up"} sort-icon"></i>
+              </div>
+            </th>
+            <th class="th-sortable" data-sort="stock">
+              <div class="th-content">
+                <span>Disponibilitate rețea</span>
+                <i class="ph ${sortDescriptor.column === "stock" ? (sortDescriptor.direction === "ascending" ? "ph-arrow-up" : "ph-arrow-down") : "ph-arrows-down-up"} sort-icon"></i>
+              </div>
+            </th>
+            <th class="th-actions" style="text-align: right; width: 140px; padding-right: 20px;">
+              <span>Acțiuni</span>
+            </th>
+          </tr>
+        </thead>
+        <tbody id="catalog-rows"></tbody>
+      </table>
+    </div>
+
+    <div class="table-card-footer">
+      <div class="table-footer-meta">
+        <span id="table-footer-count">Afișare produse active din nomenclator</span>
+      </div>
+      <div class="table-footer-pagination">
+        <button class="btn-pagination" id="table-prev-btn" disabled>Anterior</button>
+        <button class="btn-pagination" id="table-next-btn">Următor</button>
+      </div>
+    </div>
+  </div>
+  <div id="compare-bar-wrap"></div>
+  <p class="source-note">Denumirile comerciale și disponibilitatea sunt sincronizate din date oficiale ANMDMR / EMA. Substituția clinică necesită aviz medical.</p>`;
+}
+
+function tableRows(list) {
+  if (!list || !list.length) {
+    return `<tr class="catalog-row-empty"><td colspan="6"><div class="empty" style="padding: 36px 20px; text-align: center; color: var(--muted);">Niciun medicament găsit în nomenclator. Verifică ortografia sau caută după substanță activă (ex: „amoxicilină”, „paracetamol”).</div></td></tr>`;
+  }
+
+  const sorted = sortDrugList(list);
+
+  return sorted.map(d => {
+    const isSelected = selected.includes(d.id);
+    const isFollowed = followed.includes(d.id);
+
+    let stockPercent = 80;
+    let stockLabel = "Stabil";
+    let progressClass = "progress-default";
+    if (d.status === "resumed") {
+      stockPercent = 95;
+      stockLabel = "Disponibil";
+      progressClass = "progress-success";
+    } else if (d.status === "temporary") {
+      stockPercent = 30;
+      stockLabel = "Deficit";
+      progressClass = "progress-warning";
+    } else if (d.status === "permanent") {
+      stockPercent = 5;
+      stockLabel = "Epuizat";
+      progressClass = "progress-danger";
+    }
+
+    return `
+    <tr class="catalog-row ${isSelected ? "is-selected" : ""}" data-row-id="${d.id}">
+      <td class="td-select col-select">
+        <label class="ui-checkbox-wrap" title="Compară ${d.name}">
+          <input type="checkbox" class="ui-checkbox tick" data-select="${d.id}" ${isSelected ? "checked" : ""} aria-label="Compară ${d.name}">
+        </label>
+      </td>
+      <td class="td-drug col-drug">
+        <div class="cell-drug-group">
+          <div class="drug-avatar ${d.status === "permanent" ? "avatar-danger" : d.status === "temporary" ? "avatar-warning" : d.status === "resumed" ? "avatar-success" : "avatar-default"}">
+            <img src="spot-icons/drug-pill.png" alt="" aria-hidden="true">
+          </div>
+          <div class="drug-info-text">
+            <button class="plain table-drug-title drug-title" data-detail="${d.id}">${d.name} ${d.strength}</button>
+            <span class="table-drug-sub drug-dci">${d.dci}</span>
+          </div>
+        </div>
+      </td>
+      <td class="td-status col-status">
+        ${badge(d)}
+      </td>
+      <td class="td-meta col-meta">
+        <div class="cell-meta-group">
+          <p class="table-meta-title meta-form">${d.form}</p>
+          <p class="table-meta-sub meta-atc"><span class="table-atc-pill">ATC: ${d.atc}</span></p>
+        </div>
+      </td>
+      <td class="td-progress col-progress">
+        <div class="table-progress-container" title="Disponibilitate estimată: ${stockPercent}%">
+          <div class="table-progress-track">
+            <div class="table-progress-bar ${progressClass}" style="width: ${stockPercent}%;"></div>
+          </div>
+          <span class="table-progress-text">${stockLabel}</span>
+        </div>
+      </td>
+      <td class="td-actions col-action">
+        <div class="cell-actions-group">
+          <button class="btn-table-action ${isFollowed ? "followed" : ""}" data-follow="${d.id}" aria-pressed="${isFollowed}" title="${isFollowed ? "Nu mai urmări" : "Urmărește medicamentul"}">
+            <i class="ph ${isFollowed ? "ph-check" : "ph-plus"}"></i>
+            <span>${isFollowed ? "Urmărit" : "Urmărește"}</span>
+          </button>
+          <button class="btn-table-more" data-detail="${d.id}" title="Vezi fișa completă">
+            <i class="ph ph-dots-three-vertical"></i>
+          </button>
+        </div>
+      </td>
+    </tr>
+    `;
+  }).join("");
+}
+
 function renderCompareBar(){
-  const el=$('#compare-bar-wrap');
+  const el=$("#compare-bar-wrap");
   if(!el)return;
   if(selected.length===0){
-    el.innerHTML=`<div class="comparebar comparebar-empty"><div class="compare-icon-wrap">${icon('sliders')}</div><div class="compare-text-wrap"><strong>Compară două medicamente</strong><p>Bifează „Compară” pe 2 produse din catalog pentru a deschide analiza comparativă (DCI, concentrație, disponibilitate, cod ATC).</p></div></div>`;
+    el.innerHTML=`<div class="comparebar comparebar-empty"><div class="compare-icon-wrap">${icon("sliders")}</div><div class="compare-text-wrap"><strong>Compară două medicamente</strong><p>Bifează căsuța din stânga pe 2 produse din catalog pentru a deschide analiza comparativă (DCI, concentrație, disponibilitate, cod ATC).</p></div></div>`;
   }else if(selected.length===1){
     const d1=get(selected[0]);
-    el.innerHTML=`<div class="comparebar comparebar-step1"><div class="compare-top"><span class="compare-badge">1 din 2 selectate</span><button class="compare-clear-btn" id="compare-clear">${icon('x')} Anulează</button></div><div class="compare-chips"><span class="compare-chip selected">${d1.name} ${d1.strength}</span><span class="compare-chip placeholder">+ Alege încă un medicament</span></div><p class="compare-subtext">Mai bifează încă un produs din listă pentru a activa comparația față în față.</p></div>`;
-    $('#compare-clear').onclick=()=>{selected=[];updateCatalog()};
+    el.innerHTML=`<div class="comparebar comparebar-step1"><div class="compare-top"><span class="compare-badge">1 din 2 selectate</span><button class="compare-clear-btn" id="compare-clear">${icon("x")} Anulează</button></div><div class="compare-chips"><span class="compare-chip selected">${d1.name} ${d1.strength}</span><span class="compare-chip placeholder">+ Alege încă un medicament</span></div><p class="compare-subtext">Mai bifează încă un produs din listă pentru a activa comparația față în față.</p></div>`;
+    $("#compare-clear").onclick=()=>{selected=[];updateCatalog()};
   }else if(selected.length===2){
     const d1=get(selected[0]),d2=get(selected[1]);
-    el.innerHTML=`<div class="comparebar comparebar-ready"><div class="compare-top"><span class="compare-badge ready">${icon('check')} 2 din 2 pregătite</span><button class="compare-clear-btn" id="compare-clear">${icon('x')} Resetează</button></div><div class="compare-chips"><span class="compare-chip selected">${d1.name}</span><span class="compare-vs">vs</span><span class="compare-chip selected">${d2.name}</span></div><button class="btn primary compare-cta" id="compare">${icon('sliders')} Compară cele două prezentări →</button></div>`;
-    $('#compare').onclick=compare;
-    $('#compare-clear').onclick=()=>{selected=[];updateCatalog()};
+    el.innerHTML=`<div class="comparebar comparebar-ready"><div class="compare-top"><span class="compare-badge ready">${icon("check")} 2 din 2 pregătite</span><button class="compare-clear-btn" id="compare-clear">${icon("x")} Resetează</button></div><div class="compare-chips"><span class="compare-chip selected">${d1.name}</span><span class="compare-vs">vs</span><span class="compare-chip selected">${d2.name}</span></div><button class="btn primary compare-cta" id="compare">${icon("sliders")} Compară cele două prezentări →</button></div>`;
+    $("#compare").onclick=compare;
+    $("#compare-clear").onclick=()=>{selected=[];updateCatalog()};
   }
 }
+
 let currentSearchController = null;
 async function updateCatalog() {
   const trimmed = query.trim();
-  const rowsEl = $('#catalog-rows');
+  const rowsEl = $("#catalog-rows");
   
   // If query is short (< 2 chars), show demo/curated list
   if (trimmed.length < 2) {
-    let list = drugs.filter(d => normal([d.name, d.dci, d.atc, d.group || ''].join(' ')).includes(normal(trimmed)));
+    let list = drugs.filter(d => normal([d.name, d.dci, d.atc, d.group || ""].join(" ")).includes(normal(trimmed)));
+    lastCatalogList = list;
     if (rowsEl) rowsEl.innerHTML = tableRows(list);
+    if ($("#table-count-badge")) $("#table-count-badge").textContent = list.length + " produse";
+    if ($("#table-footer-count")) $("#table-footer-count").textContent = "Afișare 1–" + list.length + " din 8.150 produse active";
     renderCompareBar();
     bindRows();
     return;
@@ -437,8 +639,8 @@ async function updateCatalog() {
 
   // Show loading indicator
   if (rowsEl) {
-    rowsEl.innerHTML = `<tr><td colspan="5" style="text-align: center; padding: 36px 20px; color: var(--muted);">
-      <div style="display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 13px;">
+    rowsEl.innerHTML = `<tr><td colspan="6" style="text-align: center; padding: 40px 20px; color: #667085;">
+      <div style="display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 13.5px;">
         <span class="provenance-dot" style="animation: pulse 1s infinite;"></span>
         <span>Se caută „<strong>${trimmed}</strong>” în baza națională ANMDMR (Alex's API)...</span>
       </div>
@@ -454,53 +656,59 @@ async function updateCatalog() {
   try {
     const apiUrl = `/api/v1/medicines?country=RO&q=${encodeURIComponent(trimmed)}&limit=30`;
     const res = await fetch(apiUrl, { signal: currentSearchController.signal });
-    if (!res.ok) throw new Error('API HTTP ' + res.status);
+    if (!res.ok) throw new Error("API HTTP " + res.status);
     const data = await res.json();
     
     if (data && Array.isArray(data.items) && data.items.length > 0) {
       const liveList = data.items.map(item => {
         const dciStr = (Array.isArray(item.active_substances) && item.active_substances.length > 0)
-          ? item.active_substances.join(' + ')
-          : 'Substanță nespecificată';
+          ? item.active_substances.join(" + ")
+          : "Substanță nespecificată";
         
         const mapped = {
           id: item.medicine_id,
-          name: item.name || 'Medicament fără denumire',
+          name: item.name || "Medicament fără denumire",
           dci: dciStr,
-          strength: item.strength || '',
-          form: item.pharmaceutical_form || item.dose_form || 'Formă nespecificată',
-          atc: item.atc_code || '-',
-          status: item.supply_shortage ? 'temporary' : (item.availability === 'authorised' ? 'resumed' : 'unknown'),
-          date: 'Date live ANMDMR',
-          note: item.marketing_authorisation_holder ? `Deținător autorizație (MAH): ${item.marketing_authorisation_holder}` : 'Produs autorizat în România.',
-          event: item.supply_shortage ? 'Deficit raportat' : null,
-          group: 'Nomenclator Oficial',
-          mah: item.marketing_authorisation_holder || '',
+          strength: item.strength || "",
+          form: item.pharmaceutical_form || item.dose_form || "Formă nespecificată",
+          atc: item.atc_code || "-",
+          status: item.supply_shortage ? "temporary" : (item.availability === "authorised" ? "resumed" : "unknown"),
+          date: "Date live ANMDMR",
+          note: item.marketing_authorisation_holder ? `Deținător autorizație (MAH): ${item.marketing_authorisation_holder}` : "Produs autorizat în România.",
+          event: item.supply_shortage ? "Deficit raportat" : null,
+          group: "Nomenclator Oficial",
+          mah: item.marketing_authorisation_holder || "",
           isLive: true
         };
         liveDrugsCache.set(mapped.id, mapped);
         return mapped;
       });
 
+      lastCatalogList = liveList;
       if (rowsEl) rowsEl.innerHTML = tableRows(liveList);
+      if ($("#table-count-badge")) $("#table-count-badge").textContent = (data.total || liveList.length) + " rezultate";
+      if ($("#table-footer-count")) $("#table-footer-count").textContent = "Afișare 1–" + liveList.length + " din " + (data.total || liveList.length) + " medicamente găsite";
       renderCompareBar();
       bindRows();
       return;
     }
   } catch (err) {
-    if (err.name === 'AbortError') return;
-    console.warn('API live query error, falling back to local dataset:', err);
+    if (err.name === "AbortError") return;
+    console.warn("API live query error, falling back to local dataset:", err);
   }
 
   // Fallback to local filter if API returned 0 items or was unreachable
-  let list = drugs.filter(d => normal([d.name, d.dci, d.atc, d.group || ''].join(' ')).includes(normal(trimmed)));
+  let list = drugs.filter(d => normal([d.name, d.dci, d.atc, d.group || ""].join(" ")).includes(normal(trimmed)));
+  lastCatalogList = list;
   if (rowsEl) {
     if (list.length > 0) {
       rowsEl.innerHTML = tableRows(list);
     } else {
-      rowsEl.innerHTML = `<tr class="catalog-row-empty"><td colspan="5"><div class="empty">Niciun medicament găsit pentru „<strong>${trimmed}</strong>” în nomenclatorul oficial. Verifică ortografia sau încearcă după substanță activă (ex: „amoxicilină”, „paracetamol”, „metformină”).</div></td></tr>`;
+      rowsEl.innerHTML = `<tr class="catalog-row-empty"><td colspan="6"><div class="empty" style="padding: 36px 20px; text-align: center; color: var(--muted);">Niciun medicament găsit pentru „<strong>${trimmed}</strong>” în nomenclatorul oficial. Verifică ortografia sau încearcă după substanță activă (ex: „amoxicilină”, „paracetamol”, „metformină”).</div></td></tr>`;
     }
   }
+  if ($("#table-count-badge")) $("#table-count-badge").textContent = list.length + " produse";
+  if ($("#table-footer-count")) $("#table-footer-count").textContent = "Afișare 1–" + list.length + " produse active";
   renderCompareBar();
   bindRows();
 }
@@ -789,7 +997,54 @@ async function detail(id){
 function settings(){openModal('Alerte care contează pentru tine','PREFERINȚE · SALVARE LOCALĂ',`<p>Alege tipurile de evenimente pentru lista ta. În acest prototip, notificările se pot doar previzualiza.</p><form id="prefs-form"><label class="checkline"><input class="tick" name="temporary" type="checkbox" ${prefs.temporary?'checked':''}>Discontinuități temporare</label><label class="checkline"><input class="tick" name="permanent" type="checkbox" ${prefs.permanent?'checked':''}>Discontinuități permanente</label><label class="checkline"><input class="tick" name="resumed" type="checkbox" ${prefs.resumed?'checked':''}>Reluări de comercializare</label><label class="field">Frecvență dorită în produsul final<select name="frequency"><option value="daily" ${prefs.frequency==='daily'?'selected':''}>Rezumat zilnic</option><option value="immediate" ${prefs.frequency==='immediate'?'selected':''}>La fiecare schimbare</option><option value="weekly" ${prefs.frequency==='weekly'?'selected':''}>Rezumat săptămânal</option></select></label><button class="btn primary" type="submit">Salvează și previzualizează ${icon('arrow')}</button></form>`);$('#prefs-form').onsubmit=e=>{e.preventDefault();const f=new FormData(e.target);prefs={frequency:f.get('frequency'),temporary:f.has('temporary'),permanent:f.has('permanent'),resumed:f.has('resumed')};save('medora-prefs',prefs);let list=drugs.filter(d=>followed.includes(d.id)&&prefs[d.status]);openModal('Preferințe salvate','PREVIZUALIZARE · NU SE TRIMITE',`<p>Ritm selectat: ${({daily:'zilnic',weekly:'săptămânal',immediate:'la fiecare schimbare'})[prefs.frequency]}. ${list.length} evenimente demo corespund listei și preferințelor tale.</p><div class="panel">${alertrows(list)}</div><p style="margin-top:18px">Trimiterea emailurilor și notificărilor push necesită implementarea serviciului.</p>`);bindRows()};}
 function compare(){if(selected.length!==2)return;const a=get(selected[0]),b=get(selected[1]);const isSameDci=a.dci===b.dci;const isSameStrength=a.strength===b.strength;const isSameForm=a.form===b.form;openModal('Comparație de prezentări','DATE DEMO · FĂRĂ ECHIVALENȚĂ CLINICĂ',`<p>Aceeași substanță, concentrație și formă nu garantează interschimbabilitatea. Exemplu de comparație administrativă.</p><div class="tablewrap"><table><thead><tr><th>Câmp</th><th>${a.name}</th><th>${b.name}</th></tr></thead><tbody>${[['DCI',a.dci,b.dci],['Concentrație',a.strength,b.strength],['Formă',a.form,b.form],['ATC',a.atc,b.atc],['Statut',badge(a),badge(b)],['Stoc local','Necunoscut','Necunoscut']].map(r=>`<tr>${r.map(v=>`<td>${v}</td>`).join('')}</tr>`).join('')}</tbody></table></div><div class="clinical-compare-box"><img src="${isSameDci?'spot-icons/substitution.png':'spot-icons/interactions.png'}" alt="" aria-hidden="true"><div><div class="clinical-card-kicker">${isSameDci?'ANALIZĂ SUBSTITUȚIE BIOECHIVALENȚĂ':'VERIFICARE ASOCIERE & INTERACȚIUNI'}</div><div class="clinical-card-title">${isSameDci?(isSameStrength&&isSameForm?`Potențial de substituție generică directă: ambele conțin ${a.dci} ${a.strength}.`:`Aceeași substanță activă (${a.dci}), dar formele sau concentrațiile diferă.`):`Asociere terapeutică între ${a.dci} și ${b.dci}.`}</div><small style="display:block;margin-top:4px;color:var(--theme-muted,#75817a);line-height:1.4">${isSameDci?'Înainte de eliberare, consultați lista oficială a medicamentelor generice interschimbabile aprobată de ANMDMR.':'Nu au fost semnalate contraindicații majore de asociere în ghidul demonstrativ curent.'}</small></div></div><div class="result" style="margin-top:14px">${isSameDci&&isSameStrength&&isSameForm?'DCI, concentrație și formă coincid în setul demo.':'Prezentările diferă. Nu sunt marcate drept echivalente.'}</div>`)}
 function bindRows(){document.querySelectorAll('[data-detail]').forEach(b=>b.onclick=()=>detail(b.dataset.detail));document.querySelectorAll('[data-follow]').forEach(b=>b.onclick=()=>follow(b.dataset.follow));document.querySelectorAll('[data-select]').forEach(b=>b.onchange=()=>{let id=b.dataset.select;if(b.checked&&selected.length===2){b.checked=false;toast('Poți compara două prezentări simultan.');return}selected=b.checked?[...selected,id]:selected.filter(x=>x!==id);updateCatalog()})}
-function bind(){document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>{query='';navigate(b.dataset.go)});document.querySelectorAll('[data-settings]').forEach(b=>b.onclick=settings);document.querySelectorAll('[data-filter]').forEach(b=>b.onclick=()=>{filter=b.dataset.filter;document.querySelectorAll('[data-filter]').forEach(c=>{c.classList.toggle('active',c.dataset.filter===filter);c.setAttribute('aria-pressed',c.dataset.filter===filter)});filterAlerts()});bindRows();if($('#hero-search'))$('#hero-search').onsubmit=e=>{e.preventDefault();query=new FormData(e.target).get('q').trim();navigate('catalog')};document.querySelectorAll('[data-search]').forEach(b=>b.onclick=()=>{query=b.dataset.search;navigate('catalog')});let searchDebounceTimer = null;
+function bind(){document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>{query='';navigate(b.dataset.go)});document.querySelectorAll('[data-settings]').forEach(b=>b.onclick=settings);document.querySelectorAll('[data-filter]').forEach(b=>b.onclick=()=>{filter=b.dataset.filter;document.querySelectorAll('[data-filter]').forEach(c=>{c.classList.toggle('active',c.dataset.filter===filter);c.setAttribute('aria-pressed',c.dataset.filter===filter)});filterAlerts()});bindRows();
+document.querySelectorAll(".th-sortable").forEach(th => {
+  th.onclick = () => {
+    const col = th.dataset.sort;
+    if (sortDescriptor.column === col) {
+      sortDescriptor.direction = sortDescriptor.direction === "ascending" ? "descending" : "ascending";
+    } else {
+      sortDescriptor.column = col;
+      sortDescriptor.direction = "ascending";
+    }
+    document.querySelectorAll(".th-sortable").forEach(header => {
+      const iconEl = header.querySelector(".sort-icon");
+      if (iconEl) {
+        if (header.dataset.sort === sortDescriptor.column) {
+          iconEl.className = "ph " + (sortDescriptor.direction === "ascending" ? "ph-arrow-up" : "ph-arrow-down") + " sort-icon";
+        } else {
+          iconEl.className = "ph ph-arrows-down-up sort-icon";
+        }
+      }
+    });
+    if (lastCatalogList && lastCatalogList.length > 0) {
+      const rowsEl = $("#catalog-rows");
+      if (rowsEl) rowsEl.innerHTML = tableRows(lastCatalogList);
+      bindRows();
+    }
+  };
+});
+const selectAll = $("#select-all-checkbox");
+if (selectAll) {
+  selectAll.onchange = () => {
+    const visibleInputs = document.querySelectorAll("tbody input[data-select]");
+    if (selectAll.checked) {
+      selected = Array.from(visibleInputs).slice(0, 2).map(i => i.dataset.select);
+      if (visibleInputs.length > 2) {
+        toast("Au fost selectate primele 2 medicamente pentru analiză comparativă.");
+      }
+    } else {
+      selected = [];
+    }
+    updateCatalog();
+  };
+}
+if ($("#table-options-btn")) {
+  $("#table-options-btn").onclick = () => {
+    toast("Catalogul include peste 8.150 de produse oficiale ANMDMR și EMA.");
+  };
+}
+if($('#hero-search'))$('#hero-search').onsubmit=e=>{e.preventDefault();query=new FormData(e.target).get('q').trim();navigate('catalog')};document.querySelectorAll('[data-search]').forEach(b=>b.onclick=()=>{query=b.dataset.search;navigate('catalog')});let searchDebounceTimer = null;
 if($('#catalog-query')){
   $('#catalog-query').value = query;
   $('#catalog-query').oninput = e => {
