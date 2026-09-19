@@ -704,6 +704,7 @@
   <link rel="stylesheet" href="intro.css?v=1">
   <link rel="stylesheet" href="landing-mobile.css?v=1">
   <script src="theme.js?v=10" defer></script>
+  <script src="i18n.js?v=1" defer></script>
 </head>
 <body>
   <script src="intro.js?v=1"></script>
@@ -714,22 +715,22 @@
         <div class="heroui-avatar heroui-avatar-topbar" id="top-user-avatar" style="background: radial-gradient(circle at 32% 28%, #bbf7d0 0%, #38bdf8 36%, #818cf8 68%, #4f46e5 100%);">
           <span class="heroui-avatar-fallback" id="top-user-initials">AP</span>
         </div>
-      </a><a class="open-app" href="medora.html#overview"><span>Deschide aplicația</span><i data-lucide="arrow-up-right"></i></a></div>
+      </a><a class="open-app" href="medora.html#overview"><span data-i18n="nav.open_app">Deschide aplicația</span><i data-lucide="arrow-up-right"></i></a></div>
     </header>
     <section class="hero" aria-labelledby="hero-title">
       <div class="hero-copy reveal">
-        <h1 id="hero-title">Găsește rapid <span>informații despre</span> medicamente</h1>
+        <h1 id="hero-title"><span data-i18n="hero.title">Găsește rapid informații despre medicamente</span></h1>
         <div class="search-area">
           <form class="search" id="search-form" action="medora.html#catalog" method="get">
             <i data-lucide="search"></i>
-            <input id="medicine-search" name="q" aria-label="Caută medicamente" placeholder="Medicament, substanță sau cod ATC" autocomplete="off" aria-controls="suggestions" aria-expanded="false">
-            <button type="submit"><span>Caută</span><i data-lucide="arrow-right"></i></button>
+            <input id="medicine-search" name="q" aria-label="Caută medicamente" placeholder="Medicament, substanță sau cod ATC" data-i18n-placeholder="hero.search_placeholder" autocomplete="off" aria-controls="suggestions" aria-expanded="false">
+            <button type="submit"><span data-i18n="hero.search_btn">Caută</span><i data-lucide="arrow-right"></i></button>
           </form>
           <div class="suggestions" id="suggestions" role="listbox" hidden></div>
         </div>
-        <p class="source-note">Catalog și schimbări de disponibilitate · Surse: <a href="https://nomenclator.anm.ro/medicamente" target="_blank" rel="noopener">ANMDMR</a>, <a href="https://www.ema.europa.eu/" target="_blank" rel="noopener">EMA</a></p>
+        <p class="source-note"><span data-i18n="hero.provenance_prefix">Catalog și schimbări de disponibilitate · Surse:</span> <a href="https://nomenclator.anm.ro/medicamente" target="_blank" rel="noopener" data-i18n-agency>ANMDMR, EMA</a></p>
         <div class="frequent-tags">
-          <span class="frequent-label">Frecvent căutate:</span>
+          <span class="frequent-label" data-i18n="hero.frequent">Frecvent căutate:</span>
           <button type="button" class="frequent-chip" data-search="Paracetamol">Paracetamol</button>
           <button type="button" class="frequent-chip" data-search="Amoxicilină">Amoxicilină</button>
           <button type="button" class="frequent-chip" data-search="N02BE01">N02BE01</button>
@@ -738,27 +739,27 @@
       <div class="modules-grid reveal" aria-label="Acces rapid module">
         <a class="module-card" href="medora.html#catalog">
           <span class="module-card-icon"><img src="spot-icons/medicine.png?v=2" alt="" aria-hidden="true"></span>
-          <span class="module-card-label">Medicamente</span>
+          <span class="module-card-label" data-i18n="cat.medicines.title">Medicamente</span>
         </a>
         <a class="module-card" href="medora.html#interactions">
           <span class="module-card-icon"><img src="spot-icons/interactions.png?v=2" alt="" aria-hidden="true"></span>
-          <span class="module-card-label">Interacțiuni</span>
+          <span class="module-card-label" data-i18n="cat.interactions.title">Interacțiuni</span>
         </a>
         <a class="module-card" href="medora.html#availability">
           <span class="module-card-icon"><img src="spot-icons/radar.png?v=2" alt="" aria-hidden="true"></span>
-          <span class="module-card-label">Disponibilitate</span>
+          <span class="module-card-label" data-i18n="cat.availability.title">Disponibilitate</span>
         </a>
         <a class="module-card" href="medora.html#tools">
           <span class="module-card-icon"><img src="spot-icons/tools.png?v=2" alt="" aria-hidden="true"></span>
-          <span class="module-card-label">Instrumente</span>
+          <span class="module-card-label" data-i18n="cat.tools.title">Instrumente</span>
         </a>
         <a class="module-card" href="medora.html#atc">
           <span class="module-card-icon"><img src="spot-icons/atc.png?v=2" alt="" aria-hidden="true"></span>
-          <span class="module-card-label">ATC</span>
+          <span class="module-card-label" data-i18n="cat.atc.title">ATC</span>
         </a>
         <a class="module-card" href="medora.html#icd10">
           <span class="module-card-icon"><img src="spot-icons/icd10.png?v=2" alt="" aria-hidden="true"></span>
-          <span class="module-card-label">ICD-10</span>
+          <span class="module-card-label" data-i18n="cat.icd10.title">ICD-10</span>
         </a>
       </div>
     </section>
@@ -767,7 +768,7 @@
   <section class="precision-section" aria-labelledby="precision-title">
     <div class="precision-header">
       <div class="precision-heading">
-        <h2 id="precision-title"><span>Un singur flux, de la căutare la decizie.</span><span class="precision-gradient">Claritate la fiecare pas.</span></h2>
+        <h2 id="precision-title"><span data-i18n="workflow.headline">Un singur flux, de la căutare la decizie. Claritate la fiecare pas.</span></h2>
         <p>Medora adună, corelează, verifică și urmărește informațiile despre medicamente care contează înainte de prescripție.</p>
       </div>
     </div>
@@ -1466,7 +1467,7 @@
         </div>
       </div>
       <div class="footer-column">
-        <h3>Produs</h3>
+        <h3 data-i18n="footer.product">Produs</h3>
         <nav aria-label="Produs">
           <a href="medora.html#catalog">Medicamente</a>
           <a href="pricing.html">Tarife & planuri</a>
@@ -1476,7 +1477,7 @@
         </nav>
       </div>
       <div class="footer-column">
-        <h3>Resurse</h3>
+        <h3 data-i18n="footer.resources">Resurse</h3>
         <nav aria-label="Resurse">
           <a href="medora.html#sources">Surse oficiale</a>
           <a href="medora.html?q=C09AA05#catalog">Coduri ATC</a>
@@ -1485,11 +1486,11 @@
         </nav>
       </div>
       <div class="footer-newsletter">
-        <h3>Rămâi la curent</h3>
+        <h3 data-i18n="footer.stay_updated">Rămâi la curent</h3>
         <p>Primește actualizări despre funcții noi și schimbările importante din catalogul de medicamente.</p>
         <form class="footer-form" id="footer-form">
-          <input type="email" name="email" aria-label="Adresa ta de email" placeholder="Adresa ta de email" required>
-          <button type="submit">Abonează-te</button>
+          <input type="email" name="email" aria-label="Adresa ta de email" placeholder="Adresa ta de email" data-i18n-placeholder="footer.newsletter_placeholder" required>
+          <button type="submit"><span data-i18n="footer.subscribe">Abonează-te</span></button>
         </form>
         <div class="footer-form-message" id="footer-form-message" role="status" aria-live="polite"></div>
       </div>

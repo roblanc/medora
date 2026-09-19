@@ -212,6 +212,9 @@
       }
     });
 
+    if (window.applyI18n) {
+      window.applyI18n(country.id);
+    }
     window.dispatchEvent(new CustomEvent('medora:country-change', { detail: country }));
   };
 
