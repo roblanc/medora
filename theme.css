@@ -1367,3 +1367,123 @@ dialog .tablewrap td {
 body.medora-app .sidebar .brand {
   margin-bottom: 20px !important;
 }
+
+/* ========================================================
+   LINE SIDEBAR SYSTEM (React Bits Proximity Interaction)
+   ======================================================== */
+
+.sidebar .nav {
+  --accent-color: #246951;
+  --text-color: #1f342d;
+  --text-muted: #64756e;
+  --marker-color: #d1d9cf;
+  --marker-length: 16px;
+  --marker-gap: 8px;
+  --tick-scale: 0.45;
+  --max-shift: 8px;
+  --item-gap: 4px;
+  --smoothing: 100ms;
+
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--item-gap);
+  padding: 4px 0;
+}
+
+@media (min-width: 621px) {
+  .sidebar .nav {
+    padding-left: calc(var(--marker-length) + var(--marker-gap)) !important;
+  }
+
+  .sidebar .nav button.line-sidebar__item {
+    position: relative !important;
+    cursor: pointer !important;
+    border: none !important;
+    background: transparent !important;
+    padding: 7px 10px 7px 8px !important;
+    border-radius: 9px !important;
+    width: 100% !important;
+    text-align: left !important;
+    display: flex !important;
+    align-items: center !important;
+    box-sizing: border-box !important;
+    transition: background-color 0.2s ease !important;
+  }
+
+  .sidebar .nav button.line-sidebar__item:hover {
+    background: rgba(0, 0, 0, 0.035) !important;
+  }
+
+  .sidebar .nav button.line-sidebar__item.active {
+    background: color-mix(in srgb, var(--accent-color) 7%, transparent) !important;
+  }
+
+  /* Leading Marker Line */
+  .line-sidebar__marker {
+    position: absolute !important;
+    top: 50% !important;
+    left: calc(-1 * var(--marker-length) - var(--marker-gap)) !important;
+    height: 2px !important;
+    width: var(--marker-length) !important;
+    background-color: color-mix(in srgb, var(--accent-color) calc(var(--effect, 0) * 100%), var(--marker-color)) !important;
+    transform-origin: left center !important;
+    transform: translateY(-50%) scaleX(calc(0.35 + var(--effect, 0) * 0.8)) !important;
+    border-radius: 2px !important;
+    pointer-events: none !important;
+  }
+
+  /* Short static tick in between items */
+  .sidebar .nav button.line-sidebar__item:not(:last-child)::after {
+    content: '' !important;
+    position: absolute !important;
+    top: calc(100% + var(--item-gap) / 2) !important;
+    left: calc(-1 * var(--marker-length) - var(--marker-gap)) !important;
+    height: 1px !important;
+    width: calc(var(--marker-length) * var(--tick-scale)) !important;
+    background-color: var(--marker-color) !important;
+    opacity: 0.4 !important;
+    transform-origin: left center !important;
+    transform: translateY(-50%) scaleX(calc(0.5 + var(--effect, 0) * 0.6)) !important;
+    pointer-events: none !important;
+  }
+
+  /* Content with Proximity Shift */
+  .line-sidebar__content {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    width: 100% !important;
+    transform: translateX(calc(var(--effect, 0) * var(--max-shift))) !important;
+    color: color-mix(in srgb, var(--accent-color) calc(var(--effect, 0) * 100%), var(--text-color)) !important;
+    font-weight: calc(520 + var(--effect, 0) * 140) !important;
+    will-change: transform, color !important;
+  }
+
+  /* 3D Spot Icon subtle scale on hover proximity */
+  .line-sidebar__content .nav-spot-icon {
+    width: 22px !important;
+    height: 22px !important;
+    display: grid !important;
+    place-items: center !important;
+    flex-shrink: 0 !important;
+    transform: scale(calc(1 + var(--effect, 0) * 0.12)) !important;
+    transition: transform 0.15s ease-out !important;
+  }
+  .line-sidebar__content .nav-spot-icon img {
+    width: 20px !important;
+    height: 20px !important;
+    object-fit: contain !important;
+  }
+
+  .line-sidebar__text {
+    font-size: 13.5px !important;
+    letter-spacing: -0.01em !important;
+    white-space: nowrap !important;
+  }
+
+  /* Override old border indicator */
+  body.medora-app .nav button.active::before {
+    display: none !important;
+  }
+}
