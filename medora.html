@@ -219,6 +219,46 @@ dialog{background:rgba(255,255,255,.9);border-color:rgba(255,255,255,.96);border
 @media(prefers-reduced-motion:reduce){.content>*,.hero,.pulsecard,.stat,.panel,.btn,.nav button,.alertrow,.watchrow,.btn .ph,.nav button .ph{animation:none!important;transition:none!important}}
 
 
+
+/* Sticky Modal Header & Scrollable Modal Body */
+dialog {
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+  max-height: 88dvh !important;
+  padding: 0 !important;
+}
+dialog:not([open]) {
+  display: none !important;
+}
+.modalhead {
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 50 !important;
+  flex-shrink: 0 !important;
+  background: var(--theme-surface, rgba(255, 255, 255, 0.95)) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  border-bottom: 1px solid var(--theme-line, var(--line)) !important;
+  padding: 20px 24px 18px !important;
+}
+.modalbody {
+  flex: 1 1 auto !important;
+  overflow-y: auto !important;
+  overscroll-behavior: contain !important;
+  -webkit-overflow-scrolling: touch !important;
+  padding: 22px 24px 26px !important;
+}
+#close-modal {
+  cursor: pointer !important;
+  flex-shrink: 0 !important;
+  transition: transform .18s ease, background .18s ease !important;
+}
+#close-modal:hover {
+  transform: scale(1.08) !important;
+  background: var(--theme-wash-1, #edf2e8) !important;
+}
+
 /* 3D Spot Icons in Navigation */
 .nav button{padding:7px 11px!important;border-radius:12px!important;font-size:13px!important;gap:10px!important}
 .nav-spot-icon{width:26px;height:26px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0}

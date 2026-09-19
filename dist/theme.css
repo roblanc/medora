@@ -804,3 +804,31 @@ html[data-medora-appearance="dark"] .frequent-chip {
     color: #ffffff !important;
   }
 }
+
+/* Sticky Modal Header & Scrollable Body */
+body.medora-app dialog {
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+  max-height: 88dvh !important;
+  padding: 0 !important;
+}
+body.medora-app dialog:not([open]) {
+  display: none !important;
+}
+body.medora-app .modalhead {
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 50 !important;
+  flex-shrink: 0 !important;
+  background: var(--theme-surface, rgba(255, 255, 255, 0.95)) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  border-bottom: 1px solid var(--theme-line, var(--line)) !important;
+}
+body.medora-app .modalbody {
+  flex: 1 1 auto !important;
+  overflow-y: auto !important;
+  overscroll-behavior: contain !important;
+  -webkit-overflow-scrolling: touch !important;
+}
