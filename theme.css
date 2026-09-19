@@ -548,6 +548,13 @@ article th { background: var(--theme-accent-soft) !important; color: var(--theme
 /* ==========================================================================
    HeroUI Avatar Component (Orb Gradient + Refined Doctor Initials)
    ========================================================================== */
+/* ==========================================================================
+   HeroUI Avatar Design System Component
+   <Avatar>
+     <Avatar.Image ... />
+     <Avatar.Fallback>JD</Avatar.Fallback>
+   </Avatar>
+   ========================================================================== */
 .heroui-avatar {
   position: relative;
   display: inline-flex;
@@ -559,18 +566,18 @@ article th { background: var(--theme-accent-soft) !important; color: var(--theme
   border-radius: 9999px;
   background: radial-gradient(circle at 32% 28%, #bbf7d0 0%, #38bdf8 36%, #818cf8 68%, #4f46e5 100%);
   color: #ffffff !important;
-  font-family: 'Outfit', 'Plus Jakarta Sans', sans-serif !important;
-  font-weight: 750 !important;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+  font-weight: 650 !important;
   flex-shrink: 0;
-  box-shadow: inset 0 1.5px 2px rgba(255, 255, 255, 0.8), inset 0 -2px 4px rgba(0, 0, 0, 0.22), 0 4px 12px rgba(56, 189, 248, 0.25);
-  text-shadow: 0 1px 3px rgba(15, 23, 42, 0.45);
-  letter-spacing: -0.01em;
+  box-shadow: inset 0 1px 1.5px rgba(255, 255, 255, 0.4), 0 2px 8px rgba(0, 0, 0, 0.08);
+  letter-spacing: 0.02em;
   line-height: 1;
+  box-sizing: border-box;
 }
 .heroui-avatar-preview {
   width: 52px;
   height: 52px;
-  font-size: 17px;
+  font-size: 18px;
   box-shadow: inset 0 1.5px 2px rgba(255, 255, 255, 0.8), 0 0 0 2px var(--theme-surface, #fff), 0 0 0 4px color-mix(in srgb, var(--theme-accent, #9567bf) 45%, transparent), 0 8px 20px rgba(0, 0, 0, 0.12);
 }
 .heroui-avatar-lg {
@@ -586,7 +593,7 @@ article th { background: var(--theme-accent-soft) !important; color: var(--theme
 .heroui-avatar-topbar {
   width: 38px !important;
   height: 38px !important;
-  font-size: 14px !important;
+  font-size: 13.5px !important;
 }
 .heroui-avatar-sm {
   width: 32px;
@@ -594,9 +601,9 @@ article th { background: var(--theme-accent-soft) !important; color: var(--theme
   font-size: 12px;
 }
 .heroui-avatar-xs {
-  width: 26px;
-  height: 26px;
-  font-size: 10.5px;
+  width: 24px;
+  height: 24px;
+  font-size: 10px;
 }
 .heroui-avatar-fallback {
   display: flex;
@@ -605,11 +612,26 @@ article th { background: var(--theme-accent-soft) !important; color: var(--theme
   width: 100%;
   height: 100%;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.04em;
   font-size: inherit;
-  font-weight: inherit;
+  font-weight: 650;
   color: #ffffff !important;
-  text-shadow: 0 1px 2px rgba(15, 23, 42, 0.45);
+  text-shadow: 0 1px 2px rgba(15, 23, 42, 0.35);
+  line-height: 1;
+  user-select: none;
+}
+.heroui-avatar-img,
+.heroui-avatar-image,
+.heroui-avatar > img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: inherit;
+  display: block;
+  z-index: 1;
 }
 
 /* Orb Gradient Variations */

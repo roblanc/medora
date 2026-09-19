@@ -1072,7 +1072,7 @@ function initUserProfile() {
     if (nameEl) nameEl.textContent = user?.name || 'Dr. Andrei Popescu';
     if (roleEl) roleEl.textContent = user?.role || 'Medicină de familie · Activ';
     if (window.renderMedoraAvatar && avatarEl) {
-      window.renderMedoraAvatar(avatarEl, user?.email || user?.name);
+      window.renderMedoraAvatar(avatarEl, user?.name || user?.email, user?.avatar_url);
     } else {
       if (fallbackEl) fallbackEl.textContent = initials;
       if (avatarEl) avatarEl.style.background = gradient;

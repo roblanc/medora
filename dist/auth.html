@@ -739,10 +739,8 @@
         if (!email) return;
 
         const nameVal = nameInput ? nameInput.value.trim() : '';
-        const userInitials = calcInitials(nameVal);
         const finalName = nameVal || (currentMode === 'signup' ? 'Dr. Andrei Popescu' : (email.split('@')[0]));
-
-        const userInitials = window.getDoctorInitials ? window.getDoctorInitials(finalName) : calcInitials(finalName);
+        const userInitials = window.getDoctorInitials ? window.getDoctorInitials(finalName) : (calcInitials ? calcInitials(finalName) : 'AP');
         const userGradient = window.getDoctorGradient ? window.getDoctorGradient(finalName) : 'radial-gradient(circle at 32% 28%, #bbf7d0 0%, #38bdf8 36%, #818cf8 68%, #4f46e5 100%)';
 
         const userObj = {
