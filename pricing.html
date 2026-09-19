@@ -1,0 +1,670 @@
+<!doctype html>
+<html lang="ro" data-medora-appearance="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Tarife & Abonamente — Medora</title>
+  <meta name="description" content="Planuri simple și transparente pentru medici, cabinete și clinici medicale. Claritate pentru fiecare prescripție.">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Karla:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Caveat:wght@600;700&display=swap">
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
+  <link rel="stylesheet" href="theme.css?v=10">
+  <link rel="stylesheet" href="landing-mobile.css?v=1">
+  <script src="theme.js?v=10" defer></script>
+  <style>
+    :root {
+      --ink: #193d35;
+      --muted: #667085;
+      --line: #e4e7ec;
+      --paper: #fcfcfd;
+      --purple: #704fe6;
+      --purple-hover: #5e3ec7;
+      --purple-light: #f4f3ff;
+      --purple-text: #6941c6;
+      --green-bg: #ecfdf3;
+      --green-check: #12b76a;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font: 15px/1.6 Karla, Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: #1d2939;
+      background-color: #fafbfc;
+      background-image: radial-gradient(at 10% 10%, rgba(224, 231, 255, 0.5) 0px, transparent 50%),
+                        radial-gradient(at 90% 20%, rgba(219, 234, 254, 0.4) 0px, transparent 50%),
+                        radial-gradient(at 50% 90%, rgba(243, 244, 246, 0.6) 0px, transparent 50%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    a { color: inherit; text-decoration: none; }
+
+    /* Topbar Navigation */
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 48px;
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(228, 231, 236, 0.8);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 22px;
+      font-weight: 800;
+      color: #101828;
+      letter-spacing: -0.5px;
+    }
+    .brand-mark {
+      width: 32px;
+      height: 32px;
+      border-radius: 9px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f4f3ff;
+    }
+    .brand-mark img { width: 100%; height: 100%; object-fit: contain; }
+    
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+    }
+    .nav-links a {
+      font-size: 14px;
+      font-weight: 600;
+      color: #475467;
+      transition: color .2s ease;
+    }
+    .nav-links a:hover { color: var(--purple); }
+    .nav-links a.active { color: var(--purple); }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .app-btn {
+      padding: 8px 18px;
+      background: #101828;
+      color: #fff;
+      font-size: 13.5px;
+      font-weight: 600;
+      border-radius: 9999px;
+      transition: all .2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .app-btn:hover {
+      background: #1f2a37;
+      transform: translateY(-1px);
+    }
+
+    /* Hero Pricing Header */
+    .pricing-hero {
+      text-align: center;
+      padding: 68px 24px 44px;
+      max-width: 840px;
+      margin: 0 auto;
+    }
+    .pricing-tag {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--purple-text);
+      letter-spacing: 0.2px;
+      margin-bottom: 12px;
+      display: inline-block;
+    }
+    .pricing-title {
+      font-size: 44px;
+      font-weight: 800;
+      letter-spacing: -1.2px;
+      color: #101828;
+      margin: 0 0 16px;
+      line-height: 1.15;
+    }
+    .pricing-subtitle {
+      font-size: 17px;
+      line-height: 1.55;
+      color: #475467;
+      margin: 0 auto 36px;
+      max-width: 620px;
+    }
+
+    /* Billing Toggle Switch */
+    .billing-toggle-container {
+      display: inline-flex;
+      align-items: center;
+      background: #f2f4f7;
+      border-radius: 9999px;
+      padding: 4px;
+      border: 1px solid #eaecf0;
+      gap: 2px;
+    }
+    .toggle-btn {
+      border: none;
+      background: transparent;
+      padding: 9px 20px;
+      border-radius: 9999px;
+      font-family: inherit;
+      font-size: 13.5px;
+      font-weight: 600;
+      color: #667085;
+      cursor: pointer;
+      transition: all .2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .toggle-btn.active {
+      background: #ffffff;
+      color: #101828;
+      box-shadow: 0 2px 6px rgba(16, 24, 40, 0.08);
+    }
+    .discount-pill {
+      background: #eef2ff;
+      color: var(--purple-text);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 9999px;
+    }
+
+    /* Pricing Grid Container */
+    .pricing-grid {
+      max-width: 1160px;
+      margin: 20px auto 90px;
+      padding: 0 24px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 28px;
+      align-items: stretch;
+      position: relative;
+    }
+
+    /* Hand-Drawn Annotation Arrow (Like Reference Image) */
+    .popular-annotation {
+      position: absolute;
+      top: -46px;
+      left: 14px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      pointer-events: none;
+      z-index: 10;
+    }
+    .popular-text {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--purple-text);
+      font-family: Karla, Inter, sans-serif;
+      white-space: nowrap;
+    }
+    .popular-arrow-svg {
+      width: 34px;
+      height: 32px;
+      color: var(--purple-text);
+      overflow: visible;
+    }
+
+    /* Cards */
+    .pricing-card {
+      background: #ffffff;
+      border: 1px solid #eaecf0;
+      border-radius: 20px;
+      padding: 40px 32px 34px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 4px 16px -4px rgba(16, 24, 40, 0.04), 0 2px 6px -2px rgba(16, 24, 40, 0.02);
+      transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+      position: relative;
+    }
+    .pricing-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 32px -6px rgba(16, 24, 40, 0.08);
+      border-color: #d0d5dd;
+    }
+    .pricing-card.featured {
+      border-color: #d6bbfb;
+      box-shadow: 0 8px 24px -4px rgba(112, 79, 230, 0.12), 0 2px 8px -2px rgba(112, 79, 230, 0.06);
+    }
+    .pricing-card.featured:hover {
+      box-shadow: 0 20px 40px -8px rgba(112, 79, 230, 0.2);
+    }
+
+    /* Price Section (At Top of Card, Just Like Image) */
+    .card-price-wrap {
+      margin-bottom: 8px;
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
+    }
+    .card-price {
+      font-family: Karla, Inter, sans-serif;
+      font-size: 46px;
+      font-weight: 800;
+      letter-spacing: -1.5px;
+      color: #101828;
+      line-height: 1;
+    }
+    .card-period {
+      font-size: 16px;
+      color: #475467;
+      font-weight: 500;
+    }
+    .card-name {
+      font-size: 19px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+      margin: 12px 0 4px;
+      color: #101828;
+    }
+    .card-billing-note {
+      font-size: 13.5px;
+      color: #667085;
+      margin: 0 0 32px;
+    }
+
+    /* Features List */
+    .features-list {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      flex: 1;
+    }
+    .feature-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      font-size: 14.5px;
+      color: #344054;
+      line-height: 1.45;
+    }
+    .feature-icon {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--green-bg);
+      color: var(--green-check);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    /* CTA Button: Solid Purple Button with Rounded Corners (Identical to Image) */
+    .card-btn {
+      width: 100%;
+      height: 48px;
+      border-radius: 10px;
+      border: 1px solid var(--purple);
+      background: var(--purple);
+      color: #ffffff;
+      font-size: 15px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: all .2s ease;
+      box-shadow: 0 1px 2px rgba(16, 24, 40, 0.05);
+    }
+    .card-btn:hover {
+      background: var(--purple-hover);
+      border-color: var(--purple-hover);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(112, 79, 230, 0.28);
+    }
+
+    /* FAQ Section */
+    .faq-section {
+      max-width: 980px;
+      margin: 0 auto 100px;
+      padding: 0 24px;
+    }
+    .faq-header {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+    .faq-title {
+      font-size: 30px;
+      font-weight: 800;
+      color: #101828;
+      margin: 0 0 10px;
+      letter-spacing: -0.5px;
+    }
+    .faq-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 32px;
+    }
+    .faq-item {
+      background: #ffffff;
+      padding: 26px 28px;
+      border-radius: 16px;
+      border: 1px solid #eaecf0;
+      box-shadow: 0 2px 8px rgba(16, 24, 40, 0.03);
+    }
+    .faq-q {
+      font-size: 16px;
+      font-weight: 700;
+      color: #101828;
+      margin: 0 0 10px;
+    }
+    .faq-a {
+      font-size: 14px;
+      line-height: 1.6;
+      color: #475467;
+      margin: 0;
+    }
+
+    /* Footer */
+    .footer {
+      border-top: 1px solid #eaecf0;
+      padding: 32px 48px;
+      background: #ffffff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+      color: #667085;
+      margin-top: auto;
+    }
+    .footer-links {
+      display: flex;
+      gap: 24px;
+    }
+    .footer-links a:hover { color: var(--purple); }
+
+    /* Responsive adjustments */
+    @media (max-width: 980px) {
+      .pricing-grid {
+        grid-template-columns: 1fr;
+        max-width: 460px;
+      }
+      .popular-annotation {
+        top: -40px;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+      .faq-grid {
+        grid-template-columns: 1fr;
+      }
+      .topbar {
+        padding: 14px 20px;
+      }
+      .nav-links {
+        display: none;
+      }
+      .footer {
+        flex-direction: column;
+        gap: 16px;
+        text-align: center;
+        padding: 28px 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <header class="topbar">
+    <a class="brand" href="index.html" aria-label="Medora, pagina principală">
+      <span class="brand-mark"><img src="capsule-hero.png" alt="Medora"></span>
+      medora
+    </a>
+    <nav class="nav-links" aria-label="Navigare principală">
+      <a href="index.html">Acasă</a>
+      <a href="medora.html#catalog">Medicamente</a>
+      <a href="medora.html#interactions">Interacțiuni</a>
+      <a href="medora.html#availability">Disponibilitate</a>
+      <a href="pricing.html" class="active">Tarife</a>
+    </nav>
+    <div class="top-actions">
+      <a class="app-btn" href="medora.html#overview">
+        <span>Deschide aplicația</span>
+        <i class="ph ph-arrow-up-right" style="font-size:14px;"></i>
+      </a>
+    </div>
+  </header>
+
+  <!-- Hero Header -->
+  <section class="pricing-hero">
+    <span class="pricing-tag">Pricing</span>
+    <h1 class="pricing-title">Simple, transparent pricing</h1>
+    <p class="pricing-subtitle">
+      Credem că instrumentele clinice moderne trebuie să fie accesibile fiecărui medic și fiecărei clinici, indiferent de dimensiune.
+    </p>
+
+    <!-- Billing Cycle Switcher -->
+    <div class="billing-toggle-container">
+      <button class="toggle-btn active" id="toggle-annual" onclick="setBilling('annual')">
+        Facturare anuală <span class="discount-pill">-20%</span>
+      </button>
+      <button class="toggle-btn" id="toggle-monthly" onclick="setBilling('monthly')">
+        Facturare lunară
+      </button>
+    </div>
+  </section>
+
+  <!-- 3-Column Pricing Cards Grid -->
+  <main class="pricing-grid">
+
+    <!-- Card 1: Basic plan -->
+    <article class="pricing-card">
+      <div class="card-price-wrap">
+        <span class="card-price" id="price-basic">10€</span>
+        <span class="card-period">/mth</span>
+      </div>
+      <h2 class="card-name">Basic plan</h2>
+      <p class="card-billing-note" id="note-basic">Billed annually.</p>
+
+      <ul class="features-list">
+        <li class="feature-item">
+          <span class="feature-icon"><i class="ph ph-check"></i></span>
+          <span>Acces complet la toate funcționalitățile de bază</span>
+        </li>
+        <li class="feature-item">
+          <span class="feature-icon"><i class="ph ph-check"></i></span>
+          <span>Rapoarte de bază și analitică prescripție</span>
+        </li>
+        <li class="feature-item">
+          <span class="feature-icon"><i class="ph ph-check"></i></span>
+          <span>Până la 10 utilizatori individuali</span>
+        </li>
+        <li class="feature-item">
+          <span class="feature-icon"><i class="ph ph-check"></i></span>
+          <span>20 GB spațiu dedicat pentru date clinice</span>
+        </li>
+        <li class="feature-item">
+          <span class="feature-icon"><i class="ph ph-check"></i></span>
+          <span>Suport de bază prin chat și email</span>
+        </li>
+      </ul>
+
+      <a class="card-btn" href="auth.html?plan=basic">
+        Get started
+      </a>
+    </article>
+
+    <!-- Card 2: Business plan (Most Popular) -->
+    <article class="pricing-card featured">
+      <!-- Curved Hand-drawn Most Popular Arrow -->
+      <div class="popular-annotation" aria-hidden="true">
+        <svg class="popular-arrow-svg" viewBox="0 0 42 36" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <!-- Hand-drawn curve pointing down-right to the card edge -->
+          <path d="M6 6 C 22 2, 34 8, 30 26" />
+          <path d="M22 20 L 30 27 L 36 18" />
+        </svg>
+        <span class="popular-text">Most popular!</span>
+      </div>
+
+      <div class="card-price-wrap">
+        <span class="card-price" id="price-business">20€</span>
+        <span class="card-period">/mth</span>
+      </div>
+      <h2 class="card-name">Business plan</h2>
+      <p class="card-billing-note" id="note-business">Billed annually.</p>
+
+      <ul class="features-list">
+        <li class="feature-item">
+          <span class="feature-icon"><i class="ph ph-check"></i></span>
+          <span>Peste 200 de integrări soft clinică & EHR</span>
+        </li>
+        <li class="feature-item">
+          <span class="feature-icon"><i class="ph ph-check"></i></span>
+          <span>Rapoarte avansate și analitică farmacovigilență</span>
+        </li>
+        <li class="feature-item">
+          <span class="feature-icon"><i class="ph ph-check"></i></span>
+          <span>Până la 20 de utilizatori individuali</span>
+        </li>
+        <li class="feature-item">
+          <span class="feature-icon"><i class="ph ph-check"></i></span>
+          <span>40 GB spațiu dedicat pentru date clinice</span>
+        </li>
+        <li class="feature-item">
+          <span class="feature-icon"><i class="ph ph-check"></i></span>
+          <span>Suport prioritar prin chat și email</span>
+        </li>
+      </ul>
+
+      <a class="card-btn" href="auth.html?plan=business">
+        Get started
+      </a>
+    </article>
+
+    <!-- Card 3: Enterprise plan -->
+    <article class="pricing-card">
+      <div class="card-price-wrap">
+        <span class="card-price" id="price-enterprise">40€</span>
+        <span class="card-period">/mth</span>
+      </div>
+      <h2 class="card-name">Enterprise plan</h2>
+      <p class="card-billing-note" id="note-enterprise">Billed annually.</p>
+
+      <ul class="features-list">
+        <li class="feature-item">
+          <span class="feature-icon"><i class="ph ph-check"></i></span>
+          <span>Câmpuri și fluxuri personalizate avansate</span>
+        </li>
+        <li class="feature-item">
+          <span class="feature-icon"><i class="ph ph-check"></i></span>
+          <span>Jurnal complet de audit și istoric date</span>
+        </li>
+        <li class="feature-item">
+          <span class="feature-icon"><i class="ph ph-check"></i></span>
+          <span>Utilizatori individuali nelimitați</span>
+        </li>
+        <li class="feature-item">
+          <span class="feature-icon"><i class="ph ph-check"></i></span>
+          <span>Date și stocare nelimitată</span>
+        </li>
+        <li class="feature-item">
+          <span class="feature-icon"><i class="ph ph-check"></i></span>
+          <span>Serviciu personalizat + asistență prioritară 24/7</span>
+        </li>
+      </ul>
+
+      <a class="card-btn" href="auth.html?plan=enterprise">
+        Get started
+      </a>
+    </article>
+
+  </main>
+
+  <!-- FAQ Section -->
+  <section class="faq-section">
+    <div class="faq-header">
+      <h2 class="faq-title">Întrebări frecvente</h2>
+      <p style="color: #667085; margin: 0; font-size: 15px;">Răspunsuri la cele mai comune întrebări despre abonament și facturare.</p>
+    </div>
+
+    <div class="faq-grid">
+      <div class="faq-item">
+        <h3 class="faq-q">Pot deduce abonamentul pe cabinet (CMI / SRL)?</h3>
+        <p class="faq-a">Da. Toate abonamentele Medora sunt emise cu factură fiscală deductibilă integral pentru cabinete medicale individuale (CMI), SRL-uri sau societăți civile medicale ca și cheltuială profesională.</p>
+      </div>
+      <div class="faq-item">
+        <h3 class="faq-q">De unde provin datele despre disponibilitate și medicamente?</h3>
+        <p class="faq-a">Datele sunt sincronizate zilnic direct din registrele oficiale ale Agenției Naționale a Medicamentului (ANMDMR), Agenției Europene pentru Medicamente (EMA) și Casei Naționale de Asigurări (CNAS).</p>
+      </div>
+      <div class="faq-item">
+        <h3 class="faq-q">Există o perioadă de testare gratuită?</h3>
+        <p class="faq-a">Da. Toți utilizatorii beneficiază de 14 zile de testare gratuită cu acces complet, fără a fi necesar un card bancar la înregistrare.</p>
+      </div>
+      <div class="faq-item">
+        <h3 class="faq-q">Cum funcționează sincronizarea pe mobil?</h3>
+        <p class="faq-a">Abonamentul tău este unic pe cont. Medicamentele urmărite și preferințele de alertă se sincronizează instantaneu între browserul de pe desktop și aplicațiile native Medora iOS și Android.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div>
+      <strong>Medora</strong> · Claritate pentru fiecare prescripție. &copy; 2026.
+    </div>
+    <div class="footer-links">
+      <a href="index.html">Pagină principală</a>
+      <a href="medora.html#catalog">Medicamente</a>
+      <a href="pricing.html" style="font-weight: 700; color: var(--purple-text);">Tarife</a>
+      <a href="medora.html#sources">Surse & transparență</a>
+      <a href="research.html">Research</a>
+    </div>
+  </footer>
+
+  <script>
+    let billingCycle = 'annual';
+
+    const prices = {
+      annual: {
+        basic: '10€',
+        noteBasic: 'Billed annually.',
+        business: '20€',
+        noteBusiness: 'Billed annually.',
+        enterprise: '40€',
+        noteEnterprise: 'Billed annually.'
+      },
+      monthly: {
+        basic: '12€',
+        noteBasic: 'Billed monthly, cancel anytime.',
+        business: '24€',
+        noteBusiness: 'Billed monthly, cancel anytime.',
+        enterprise: '48€',
+        noteEnterprise: 'Billed monthly, cancel anytime.'
+      }
+    };
+
+    function setBilling(cycle) {
+      billingCycle = cycle;
+      document.getElementById('toggle-annual').classList.toggle('active', cycle === 'annual');
+      document.getElementById('toggle-monthly').classList.toggle('active', cycle === 'monthly');
+
+      const data = prices[cycle];
+      document.getElementById('price-basic').textContent = data.basic;
+      document.getElementById('note-basic').textContent = data.noteBasic;
+      document.getElementById('price-business').textContent = data.business;
+      document.getElementById('note-business').textContent = data.noteBusiness;
+      document.getElementById('price-enterprise').textContent = data.enterprise;
+      document.getElementById('note-enterprise').textContent = data.noteEnterprise;
+    }
+  </script>
+</body>
+</html>
