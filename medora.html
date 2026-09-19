@@ -481,11 +481,34 @@ function catalog() {
 
     <div class="table-card-footer">
       <div class="table-footer-meta">
-        <span id="table-footer-count">Afișare produse active din nomenclator</span>
+        <span id="table-footer-count">Afișare 1–3 din 8 produse active</span>
       </div>
       <div class="table-footer-pagination">
-        <button class="btn-pagination" id="table-prev-btn" disabled>Anterior</button>
-        <button class="btn-pagination" id="table-next-btn">Următor</button>
+        <nav class="heroui-pagination justify-center" aria-label="Paginare catalog">
+          <ul class="heroui-pagination-content" id="catalog-pagination-content">
+            <li class="heroui-pagination-item">
+              <button class="heroui-pagination-prev" id="heroui-pagination-prev" disabled aria-label="Previous page">
+                <i class="ph ph-caret-left heroui-pagination-prev-icon" aria-hidden="true"></i>
+                <span>Previous</span>
+              </button>
+            </li>
+            <li class="heroui-pagination-item">
+              <button class="heroui-pagination-link is-active" data-page="1" aria-current="page">1</button>
+            </li>
+            <li class="heroui-pagination-item">
+              <button class="heroui-pagination-link" data-page="2" aria-current="false">2</button>
+            </li>
+            <li class="heroui-pagination-item">
+              <button class="heroui-pagination-link" data-page="3" aria-current="false">3</button>
+            </li>
+            <li class="heroui-pagination-item">
+              <button class="heroui-pagination-next" id="heroui-pagination-next" aria-label="Next page">
+                <span>Next</span>
+                <i class="ph ph-caret-right heroui-pagination-next-icon" aria-hidden="true"></i>
+              </button>
+            </li>
+          </ul>
+        </nav>
       </div>
     </div>
   </div>
@@ -493,12 +516,12 @@ function catalog() {
   <p class="source-note">Denumirile comerciale și disponibilitatea sunt sincronizate din date oficiale ANMDMR / EMA. Substituția clinică necesită aviz medical.</p>`;
 }
 
-function tableRows(list) {
+function tableRows(list, alreadySorted = false) {
   if (!list || !list.length) {
     return `<tr class="catalog-row-empty"><td colspan="6"><div class="empty" style="padding: 36px 20px; text-align: center; color: var(--muted);">Niciun medicament găsit în nomenclator. Verifică ortografia sau caută după substanță activă (ex: „amoxicilină”, „paracetamol”).</div></td></tr>`;
   }
 
-  const sorted = sortDrugList(list);
+  const sorted = alreadySorted ? list : sortDrugList(list);
 
   return sorted.map(d => {
     const isSelected = selected.includes(d.id);
@@ -589,20 +612,113 @@ function renderCompareBar(){
   }
 }
 
+let catalogPage = 1;
+const catalogPageSize = 3;
+
+function renderCatalogView() {
+  const rowsEl = $("#catalog-rows");
+  if (!rowsEl) return;
+  
+  const sorted = sortDrugList(lastCatalogList || []);
+  const total = sorted.length;
+  const totalPages = Math.max(1, Math.ceil(total / catalogPageSize));
+  
+  if (catalogPage > totalPages) catalogPage = totalPages;
+  if (catalogPage < 1) catalogPage = 1;
+  
+  const start = (catalogPage - 1) * catalogPageSize;
+  const end = Math.min(start + catalogPageSize, total);
+  const pagedList = sorted.slice(start, end);
+  
+  rowsEl.innerHTML = tableRows(pagedList, true);
+  
+  if ($("#table-count-badge")) {
+    $("#table-count-badge").textContent = (query.trim().length >= 2) ? `${total} rezultate` : `${total} produse`;
+  }
+  if ($("#table-footer-count")) {
+    $("#table-footer-count").textContent = total > 0
+      ? `Afișare ${start + 1}–${end} din ${total} produse active`
+      : "0 produse găsite";
+  }
+  
+  renderHeroUIPagination(totalPages, catalogPage);
+  renderCompareBar();
+  bindRows();
+}
+
+function renderHeroUIPagination(totalPages, activePage) {
+  const container = $("#catalog-pagination-content");
+  if (!container) return;
+  
+  let linksHtml = "";
+  for (let p = 1; p <= totalPages; p++) {
+    linksHtml += `
+      <li class="heroui-pagination-item">
+        <button class="heroui-pagination-link ${p === activePage ? "is-active" : ""}" data-page="${p}" aria-current="${p === activePage ? "page" : "false"}">
+          ${p}
+        </button>
+      </li>
+    `;
+  }
+
+  container.innerHTML = `
+    <li class="heroui-pagination-item">
+      <button class="heroui-pagination-prev" id="heroui-pagination-prev" ${activePage <= 1 ? "disabled" : ""} aria-label="Previous page">
+        <i class="ph ph-caret-left heroui-pagination-prev-icon" aria-hidden="true"></i>
+        <span>Previous</span>
+      </button>
+    </li>
+    ${linksHtml}
+    <li class="heroui-pagination-item">
+      <button class="heroui-pagination-next" id="heroui-pagination-next" ${activePage >= totalPages ? "disabled" : ""} aria-label="Next page">
+        <span>Next</span>
+        <i class="ph ph-caret-right heroui-pagination-next-icon" aria-hidden="true"></i>
+      </button>
+    </li>
+  `;
+
+  const prevBtn = $("#heroui-pagination-prev");
+  if (prevBtn) {
+    prevBtn.onclick = () => {
+      if (catalogPage > 1) {
+        catalogPage--;
+        renderCatalogView();
+      }
+    };
+  }
+
+  const nextBtn = $("#heroui-pagination-next");
+  if (nextBtn) {
+    nextBtn.onclick = () => {
+      if (catalogPage < totalPages) {
+        catalogPage++;
+        renderCatalogView();
+      }
+    };
+  }
+
+  container.querySelectorAll(".heroui-pagination-link").forEach(btn => {
+    btn.onclick = () => {
+      const p = parseInt(btn.dataset.page, 10);
+      if (p && p !== catalogPage) {
+        catalogPage = p;
+        renderCatalogView();
+      }
+    };
+  });
+}
+
 let currentSearchController = null;
 async function updateCatalog() {
   const trimmed = query.trim();
   const rowsEl = $("#catalog-rows");
+  catalogPage = 1;
   
   // If query is short (< 2 chars), show demo/curated list
   if (trimmed.length < 2) {
     let list = drugs.filter(d => normal([d.name, d.dci, d.atc, d.group || ""].join(" ")).includes(normal(trimmed)));
     lastCatalogList = list;
-    if (rowsEl) rowsEl.innerHTML = tableRows(list);
-    if ($("#table-count-badge")) $("#table-count-badge").textContent = list.length + " produse";
-    if ($("#table-footer-count")) $("#table-footer-count").textContent = "Afișare 1–" + list.length + " din 8.150 produse active";
-    renderCompareBar();
-    bindRows();
+    renderCatalogView();
     return;
   }
 
@@ -654,11 +770,7 @@ async function updateCatalog() {
       });
 
       lastCatalogList = liveList;
-      if (rowsEl) rowsEl.innerHTML = tableRows(liveList);
-      if ($("#table-count-badge")) $("#table-count-badge").textContent = (data.total || liveList.length) + " rezultate";
-      if ($("#table-footer-count")) $("#table-footer-count").textContent = "Afișare 1–" + liveList.length + " din " + (data.total || liveList.length) + " medicamente găsite";
-      renderCompareBar();
-      bindRows();
+      renderCatalogView();
       return;
     }
   } catch (err) {
@@ -669,17 +781,15 @@ async function updateCatalog() {
   // Fallback to local filter if API returned 0 items or was unreachable
   let list = drugs.filter(d => normal([d.name, d.dci, d.atc, d.group || ""].join(" ")).includes(normal(trimmed)));
   lastCatalogList = list;
-  if (rowsEl) {
-    if (list.length > 0) {
-      rowsEl.innerHTML = tableRows(list);
-    } else {
-      rowsEl.innerHTML = `<tr class="catalog-row-empty"><td colspan="6"><div class="empty" style="padding: 36px 20px; text-align: center; color: var(--muted);">Niciun medicament găsit pentru „<strong>${trimmed}</strong>” în nomenclatorul oficial. Verifică ortografia sau încearcă după substanță activă (ex: „amoxicilină”, „paracetamol”, „metformină”).</div></td></tr>`;
-    }
+  if (list.length === 0 && rowsEl) {
+    rowsEl.innerHTML = `<tr class="catalog-row-empty"><td colspan="6"><div class="empty" style="padding: 36px 20px; text-align: center; color: var(--muted);">Niciun medicament găsit pentru „<strong>${trimmed}</strong>” în nomenclatorul oficial. Verifică ortografia sau încearcă după substanță activă (ex: „amoxicilină”, „paracetamol”, „metformină”).</div></td></tr>`;
+    if ($("#table-count-badge")) $("#table-count-badge").textContent = "0 produse";
+    if ($("#table-footer-count")) $("#table-footer-count").textContent = "0 produse active";
+    renderHeroUIPagination(1, 1);
+    renderCompareBar();
+    return;
   }
-  if ($("#table-count-badge")) $("#table-count-badge").textContent = list.length + " produse";
-  if ($("#table-footer-count")) $("#table-footer-count").textContent = "Afișare 1–" + list.length + " produse active";
-  renderCompareBar();
-  bindRows();
+  renderCatalogView();
 }
 function availability(){return head('Disponibilitate medicamente','Monitorizare deficite de stocuri, discontinuități temporare/permanente și reluări de comercializare (ANMDMR / EMA).',`<button class="btn primary" data-settings>${icon('bell')}Configurează alertele</button>`)+`<p class="notice">Toate cele 3 evenimente sunt scenarii demonstrative. O discontinuitate notificată indică o tensiune de aprovizionare confirmată oficial.</p><div class="panel fullradar"><div class="filters">${chips()}<label style="margin-left:auto;display:flex;align-items:center;gap:6px;font-size:10px"><input id="only-followed" type="checkbox" class="tick">Doar lista mea</label></div><div id="alerts">${alertrows(drugs.filter(d=>d.event&&(filter==='all'||d.status===filter)))}</div></div><div class="source-note">${icon('link')}<a href="${sourceUrls.dis}" target="_blank" rel="noopener">Vezi sursa reală: notificări de discontinuitate ANMDMR ↗</a></div>`}
 const radar = availability;
@@ -987,9 +1097,7 @@ document.querySelectorAll(".th-sortable").forEach(th => {
       }
     });
     if (lastCatalogList && lastCatalogList.length > 0) {
-      const rowsEl = $("#catalog-rows");
-      if (rowsEl) rowsEl.innerHTML = tableRows(lastCatalogList);
-      bindRows();
+      renderCatalogView();
     }
   };
 });

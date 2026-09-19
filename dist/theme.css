@@ -1338,9 +1338,143 @@ body.medora-app .modalbody {
   font-size: 13px !important;
   color: #475467 !important;
 }
+/* ==========================================================================
+   HeroUI Pagination Component (@heroui/react)
+   <Pagination className="justify-center">
+     <Pagination.Content>
+       <Pagination.Item>
+         <Pagination.Previous isDisabled={page === 1}>
+           <Pagination.PreviousIcon />
+           <span>Previous</span>
+         </Pagination.Previous>
+       </Pagination.Item>
+       ...
+       <Pagination.Item>
+         <Pagination.Next isDisabled={page === totalPages}>
+           <span>Next</span>
+           <Pagination.NextIcon />
+         </Pagination.Next>
+       </Pagination.Item>
+     </Pagination.Content>
+   </Pagination>
+   ========================================================================== */
+.heroui-pagination {
+  display: inline-flex !important;
+  align-items: center !important;
+  user-select: none !important;
+}
+.heroui-pagination.justify-center {
+  justify-content: center !important;
+}
+.heroui-pagination-content {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  padding: 2px !important;
+  margin: 0 !important;
+  list-style: none !important;
+  background: transparent !important;
+}
+.heroui-pagination-item {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  list-style: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Previous & Next Buttons */
+.heroui-pagination-prev,
+.heroui-pagination-next {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  height: 36px !important;
+  padding: 0 14px !important;
+  border-radius: 9px !important;
+  border: 1px solid #e4e4e7 !important;
+  background: #ffffff !important;
+  color: #3f3f46 !important;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  line-height: 1 !important;
+  cursor: pointer !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04) !important;
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  outline: none !important;
+}
+.heroui-pagination-prev:hover:not(:disabled),
+.heroui-pagination-next:hover:not(:disabled) {
+  background: #f4f4f5 !important;
+  border-color: #d4d4d8 !important;
+  color: #18181b !important;
+}
+.heroui-pagination-prev:active:not(:disabled),
+.heroui-pagination-next:active:not(:disabled) {
+  transform: scale(0.97) !important;
+}
+.heroui-pagination-prev:disabled,
+.heroui-pagination-next:disabled {
+  opacity: 0.4 !important;
+  background: #fafafa !important;
+  border-color: #eeeeee !important;
+  color: #a1a1aa !important;
+  cursor: not-allowed !important;
+  pointer-events: none !important;
+  box-shadow: none !important;
+}
+
+/* Numbered Page Links */
+.heroui-pagination-link {
+  min-width: 36px !important;
+  height: 36px !important;
+  padding: 0 8px !important;
+  border-radius: 9px !important;
+  border: 1px solid transparent !important;
+  background: transparent !important;
+  color: #52525b !important;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  line-height: 1 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  outline: none !important;
+}
+.heroui-pagination-link:hover:not(.is-active) {
+  background: #f4f4f5 !important;
+  color: #18181b !important;
+}
+.heroui-pagination-link:active:not(.is-active) {
+  transform: scale(0.96) !important;
+}
+.heroui-pagination-link.is-active {
+  background: #006fee !important;
+  border-color: #006fee !important;
+  color: #ffffff !important;
+  font-weight: 600 !important;
+  box-shadow: 0 2px 8px rgba(0, 111, 238, 0.32) !important;
+}
+
+/* Icons */
+.heroui-pagination-prev-icon,
+.heroui-pagination-next-icon {
+  font-size: 13px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
 .table-footer-pagination {
   display: flex !important;
   gap: 8px !important;
+  align-items: center !important;
 }
 .btn-pagination {
   padding: 6px 14px !important;
