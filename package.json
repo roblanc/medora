@@ -11,7 +11,8 @@
     "ios:run": "npx cap run ios",
     "mobile:start": "cd mobile && npx expo start",
     "mobile:ios": "cd mobile && npx expo run:ios",
-    "mobile:xcode": "open mobile/ios/Medora.xcworkspace"
+    "mobile:xcode": "open mobile/ios/Medora.xcworkspace",
+    "deploy": "npm run build && rsync -avz --delete dist/ root@161.97.85.247:/var/lib/medora/web/"
   },
   "dependencies": {
     "@capacitor/cli": "^8.5.2",
