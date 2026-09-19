@@ -303,7 +303,9 @@ const drugs=[
 const sourceUrls={nomen:'https://nomenclator.anm.ro/medicamente',dis:'https://www.anm.ro/medicamente-de-uz-uman/autorizare-medicamente/notificari-discontinuitate-medicamente/',ema:'https://esmp.ema.europa.eu/',dhpc:'https://www.anm.ro/medicamente-de-uz-uman/farmacovigilenta/comunicari-directe-catre-profesionistii-din-domeniul-sanatatii-cdpds/'};
 function readStore(key,fallback){try{return JSON.parse(localStorage.getItem(key))??fallback}catch{return fallback}}
 let followed=readStore('medora-followed',['amoxi','metfo','rami']);if(!Array.isArray(followed))followed=[];followed=followed.filter(id=>drugs.some(d=>d.id===id));let prefs=readStore('medora-prefs',{frequency:'daily',temporary:true,permanent:true,resumed:true});let selected=[];let page='overview',filter='all',query=new URLSearchParams(location.search).get('q')||'';let toastTimer;
-const $=s=>document.querySelector(s);const get=id=>drugs.find(d=>d.id===id);const normal=s=>s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+const $=s=>document.querySelector(s);const liveDrugsCache = new Map();
+drugs.forEach(d => liveDrugsCache.set(d.id, d));
+const get = id => liveDrugsCache.get(id) || drugs.find(d => d.id === id) || {id: id, name: id, dci: 'Substanță activă', strength: '', form: '', atc: '', status: 'unknown'};const normal=s=>s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
 function save(key,v){try{localStorage.setItem(key,JSON.stringify(v))}catch{toast('Stocare locală indisponibilă în acest browser.')}}
 function toast(s){$('#toast').textContent=s;$('#toast').classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('#toast').classList.remove('show'),3000)}
 const badge=d=>`<span class="pill ${d.status==='permanent'?'red':d.status==='resumed'?'green':''}">${({temporary:'Temporară · demo',permanent:'Permanentă · demo',resumed:'Reluată · demo',unknown:'Statut necunoscut'})[d.status]}</span>`;
@@ -349,7 +351,7 @@ function overview(){return head('Acasă','Medicamente urmărite, schimbări de d
     <small>Coduri diagnostic</small>
   </div>
 </div><div class="stats" aria-label="Rezumat operațional"><div class="stat"><img class="stat-spot" src="spot-icons/watchlist.png" alt="" aria-hidden="true"><div><strong>${followed.length}</strong><div class="metriclabel">Sub observație</div><small>prezentări urmărite</small></div></div><div class="stat"><img class="stat-spot" src="spot-icons/compare.png" alt="" aria-hidden="true"><div><strong>${drugs.filter(d=>d.status==='temporary'||d.status==='permanent').length}</strong><div class="metriclabel">Întreruperi active</div><small>temporare sau permanente</small></div></div><div class="stat"><img class="stat-spot" src="spot-icons/sources.png" alt="" aria-hidden="true"><div><strong>1</strong><div class="metriclabel">Revenire anunțată</div><small>în așteptarea confirmării</small></div></div></div><div class="lower-grid"><section><div class="section-head"><h2>Jurnal de schimbări</h2><button class="linkbutton" data-go="radar">Vezi jurnalul complet ${icon('arrow')}</button></div><div class="panel"><div class="filters">${chips()}</div><div id="alerts">${alertrows(drugs.filter(d=>d.event&&(filter==='all'||d.status===filter)))}</div></div></section><section><div class="section-head"><h2>Lista de urmărire</h2><button class="linkbutton" data-go="watch">Gestionează lista ${icon('arrow')}</button></div><div class="panel">${watchrows()}<button class="addwatch" data-go="catalog">Adaugă un medicament</button></div><div class="source-note">${icon('shield')}<span>Fiecare schimbare trebuie legată de documentul original, data publicării și istoricul verificărilor. Datele curente sunt fictive.</span></div></section></div>`}
-function catalog(){return head('Medicamente','Caută, urmărește și compară prezentări. Catalog demonstrativ cu 8 produse.')+`<div class="searchbox catalog-search">${icon('search')}<input id="catalog-query" aria-label="Caută în catalog" placeholder="Denumire, DCI, ATC sau specialitate"></div><div class="panel tablewrap catalog-tablewrap"><table class="catalog-table"><thead><tr><th>Compară</th><th>Medicament / DCI</th><th>Formă / cod ATC</th><th>Disponibilitate</th><th>Urmărire</th></tr></thead><tbody id="catalog-rows"></tbody></table></div><div id="compare-bar-wrap"></div><p class="source-note">Numele comerciale și statusurile sunt fictive. Aceeași DCI nu garantează substituția clinică.</p>`}
+function catalog(){return head('Medicamente','Caută în nomenclatorul oficial ANMDMR (peste 8.150 de produse active) și compară prezentări.')+`<div class="searchbox catalog-search">${icon('search')}<input id="catalog-query" aria-label="Caută în catalog" placeholder="Denumire, DCI, ATC sau specialitate"></div><div class="panel tablewrap catalog-tablewrap"><table class="catalog-table"><thead><tr><th>Compară</th><th>Medicament / DCI</th><th>Formă / cod ATC</th><th>Disponibilitate</th><th>Urmărire</th></tr></thead><tbody id="catalog-rows"></tbody></table></div><div id="compare-bar-wrap"></div><p class="source-note">Numele comerciale și statusurile sunt fictive. Aceeași DCI nu garantează substituția clinică.</p>`}
 function tableRows(list){return list.length?list.map(d=>`<tr class="catalog-row ${selected.includes(d.id)?'is-selected':''}"><td class="col-select"><label class="compare-opt" title="Compară ${d.name}"><input class="tick" type="checkbox" data-select="${d.id}" aria-label="Compară ${d.name}" ${selected.includes(d.id)?'checked':''}><span class="compare-label">Compară</span></label></td><td class="col-drug"><button class="plain drug-title" data-detail="${d.id}">${d.name} ${d.strength}</button><small class="drug-dci">${d.dci}</small></td><td class="col-meta"><span class="meta-form">${d.form}</span><span class="meta-separator">·</span><small class="meta-atc">ATC: ${d.atc}</small></td><td class="col-status">${badge(d)}</td><td class="col-action"><button class="btn small btn-follow ${followed.includes(d.id)?'followed':''}" data-follow="${d.id}" aria-pressed="${followed.includes(d.id)}">${icon(followed.includes(d.id)?'check':'plus')}<span>${followed.includes(d.id)?'Urmărit':'Urmărește'}</span></button></td></tr>`).join(''):'<tr class="catalog-row-empty"><td colspan="5"><div class="empty">Niciun rezultat în catalogul demo. Încearcă „amoxi” sau „metformină”.</div></td></tr>'}
 function renderCompareBar(){
   const el=$('#compare-bar-wrap');
@@ -367,7 +369,89 @@ function renderCompareBar(){
     $('#compare-clear').onclick=()=>{selected=[];updateCatalog()};
   }
 }
-function updateCatalog(){let list=drugs.filter(d=>normal([d.name,d.dci,d.atc,d.group].join(' ')).includes(normal(query)));$('#catalog-rows').innerHTML=tableRows(list);renderCompareBar();bindRows()}
+let currentSearchController = null;
+async function updateCatalog() {
+  const trimmed = query.trim();
+  const rowsEl = $('#catalog-rows');
+  
+  // If query is short (< 2 chars), show demo/curated list
+  if (trimmed.length < 2) {
+    let list = drugs.filter(d => normal([d.name, d.dci, d.atc, d.group || ''].join(' ')).includes(normal(trimmed)));
+    if (rowsEl) rowsEl.innerHTML = tableRows(list);
+    renderCompareBar();
+    bindRows();
+    return;
+  }
+
+  // Show loading indicator
+  if (rowsEl) {
+    rowsEl.innerHTML = `<tr><td colspan="5" style="text-align: center; padding: 36px 20px; color: var(--muted);">
+      <div style="display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 13px;">
+        <span class="provenance-dot" style="animation: pulse 1s infinite;"></span>
+        <span>Se caută „<strong>${trimmed}</strong>” în baza națională ANMDMR (Alex's API)...</span>
+      </div>
+    </td></tr>`;
+  }
+
+  // Abort previous in-flight search
+  if (currentSearchController) {
+    currentSearchController.abort();
+  }
+  currentSearchController = new AbortController();
+
+  try {
+    const apiUrl = `/api/v1/medicines?country=RO&q=${encodeURIComponent(trimmed)}&limit=30`;
+    const res = await fetch(apiUrl, { signal: currentSearchController.signal });
+    if (!res.ok) throw new Error('API HTTP ' + res.status);
+    const data = await res.json();
+    
+    if (data && Array.isArray(data.items) && data.items.length > 0) {
+      const liveList = data.items.map(item => {
+        const dciStr = (Array.isArray(item.active_substances) && item.active_substances.length > 0)
+          ? item.active_substances.join(' + ')
+          : 'Substanță nespecificată';
+        
+        const mapped = {
+          id: item.medicine_id,
+          name: item.name || 'Medicament fără denumire',
+          dci: dciStr,
+          strength: item.strength || '',
+          form: item.pharmaceutical_form || item.dose_form || 'Formă nespecificată',
+          atc: item.atc_code || '-',
+          status: item.supply_shortage ? 'temporary' : (item.availability === 'authorised' ? 'resumed' : 'unknown'),
+          date: 'Date live ANMDMR',
+          note: item.marketing_authorisation_holder ? `Deținător autorizație (MAH): ${item.marketing_authorisation_holder}` : 'Produs autorizat în România.',
+          event: item.supply_shortage ? 'Deficit raportat' : null,
+          group: 'Nomenclator Oficial',
+          mah: item.marketing_authorisation_holder || '',
+          isLive: true
+        };
+        liveDrugsCache.set(mapped.id, mapped);
+        return mapped;
+      });
+
+      if (rowsEl) rowsEl.innerHTML = tableRows(liveList);
+      renderCompareBar();
+      bindRows();
+      return;
+    }
+  } catch (err) {
+    if (err.name === 'AbortError') return;
+    console.warn('API live query error, falling back to local dataset:', err);
+  }
+
+  // Fallback to local filter if API returned 0 items or was unreachable
+  let list = drugs.filter(d => normal([d.name, d.dci, d.atc, d.group || ''].join(' ')).includes(normal(trimmed)));
+  if (rowsEl) {
+    if (list.length > 0) {
+      rowsEl.innerHTML = tableRows(list);
+    } else {
+      rowsEl.innerHTML = `<tr class="catalog-row-empty"><td colspan="5"><div class="empty">Niciun medicament găsit pentru „<strong>${trimmed}</strong>” în nomenclatorul oficial. Verifică ortografia sau încearcă după substanță activă (ex: „amoxicilină”, „paracetamol”, „metformină”).</div></td></tr>`;
+    }
+  }
+  renderCompareBar();
+  bindRows();
+}
 function availability(){return head('Disponibilitate medicamente','Monitorizare deficite de stocuri, discontinuități temporare/permanente și reluări de comercializare (ANMDMR / EMA).',`<button class="btn primary" data-settings>${icon('bell')}Configurează alertele</button>`)+`<p class="notice">Toate cele 3 evenimente sunt scenarii demonstrative. O discontinuitate notificată indică o tensiune de aprovizionare confirmată oficial.</p><div class="panel fullradar"><div class="filters">${chips()}<label style="margin-left:auto;display:flex;align-items:center;gap:6px;font-size:10px"><input id="only-followed" type="checkbox" class="tick">Doar lista mea</label></div><div id="alerts">${alertrows(drugs.filter(d=>d.event&&(filter==='all'||d.status===filter)))}</div></div><div class="source-note">${icon('link')}<a href="${sourceUrls.dis}" target="_blank" rel="noopener">Vezi sursa reală: notificări de discontinuitate ANMDMR ↗</a></div>`}
 const radar = availability;
 function watch(){return head('Lista mea','Medicamentele importante pentru practica ta. Preferințele se păstrează în acest browser.',`<button class="btn" data-go="catalog">${icon('plus')}Adaugă medicament</button>`)+`<div class="panel">${followed.length?followed.map(id=>{let d=get(id);return `<div class="watchrow"><div class="drugicon"><img src="spot-icons/drug-pill.png" alt="" aria-hidden="true"></div><div class="info"><button class="plain" data-detail="${id}">${d.name} ${d.strength}</button><small>${d.dci} · ${d.form}</small></div>${badge(d)}<button class="iconbtn" data-follow="${id}" aria-label="Elimină ${d.name} din lista mea">${icon('x')}</button></div>`}).join(''):'<div class="empty">Lista este goală. Adaugă medicamente din catalog.</div>'}</div><div class="comparebar"><span>Alerte pentru produsele pe care le urmărești.</span><button class="btn" data-settings>Preferințe ${icon('arrow')}</button></div>`}
@@ -633,11 +717,38 @@ function navigate(next){
 }
 function follow(id){if(followed.includes(id)){followed=followed.filter(x=>x!==id);toast('Medicament eliminat din lista mea')}else{followed.push(id);toast('Medicament adăugat în lista mea')}save('medora-followed',followed);render()}
 function openModal(title,kicker,body){$('#modal-title').textContent=title;$('#modal-kicker').textContent=kicker;$('#modal-body').innerHTML=body;if(!$('#modal').open)$('#modal').showModal()}
-function detail(id){let d=get(id);openModal(d.name+' '+d.strength,'FIȘĂ DEMO · PRODUS FICTIV',`<div class="rowtitle">${badge(d)}</div><p>Prezentare fictivă pentru testarea interfeței. Nu reprezintă un produs autorizat și nu conține recomandări medicale.</p><div class="details"><div><small>Substanță activă</small>${d.dci}</div><div><small>Concentrație</small>${d.strength}</div><div><small>Formă</small>${d.form}</div><div><small>Cod ATC ilustrativ</small>${d.atc}</div><div><small>Identificator local</small>DEMO-${d.id.toUpperCase()}</div><div><small>Stoc în farmacii</small>Necunoscut</div></div><div class="clinical-grid"><div class="clinical-card" style="cursor:pointer" id="detail-subst-card"><img src="spot-icons/substitution.png" alt="" aria-hidden="true"><div><div class="clinical-card-kicker">ALTERNATIVE DCI</div><div class="clinical-card-title">Prezentări cu ${d.dci}</div></div></div><div class="clinical-card" style="cursor:pointer" id="detail-presc-card"><img src="spot-icons/prescription.png" alt="" aria-hidden="true"><div><div class="clinical-card-kicker">GHID PRESCRIERE</div><div class="clinical-card-title">Posologie & RCP: ${d.form}</div></div></div></div><h3>Istoricul disponibilității</h3>${d.event?`<div class="timeline"><div><small>09 sept. 2026 · Scenariu demonstrativ</small>Notificare introdusă în radar</div><div><small>${d.date} · Dată fictivă</small>${d.event}</div></div><p>${d.note}</p>`:'<p>Nu avem evenimente pentru acest produs demo. Lipsa unei alerte nu confirmă disponibilitatea.</p>'}<div class="modalfoot"><button id="detail-follow" class="btn primary">${icon(followed.includes(id)?'check':'plus')}${followed.includes(id)?'Nu mai urmări':'Urmărește medicamentul'}</button><button id="same-dci" class="btn">Compară prezentări ${icon('arrow')}</button><a class="btn" href="${sourceUrls.nomen}" target="_blank" rel="noopener">Deschide nomenclatorul ↗</a></div>`);$('#detail-follow').onclick=()=>{follow(id);detail(id)};$('#same-dci').onclick=()=>{$('#modal').close();query=d.dci;selected=[id];navigate('catalog')};if($('#detail-subst-card'))$('#detail-subst-card').onclick=()=>{$('#modal').close();query=d.dci;navigate('catalog')};if($('#detail-presc-card'))$('#detail-presc-card').onclick=()=>toast(`RCP și ghid oficial pentru ${d.name} (${d.form}) deschis.`);}
+async function detail(id){
+  let d = get(id);
+  // Try to enrich live details if id starts with M
+  if (id.startsWith('M') && !d.enriched) {
+    try {
+      fetch(`/api/v1/medicines/${encodeURIComponent(id)}`)
+        .then(r => r.json())
+        .then(full => {
+          if (full && full.medicine_id) {
+            d.enriched = true;
+            if (full.marketing_authorisation_holder) d.mah = full.marketing_authorisation_holder;
+            const mahEl = document.getElementById('modal-mah-val');
+            if (mahEl) mahEl.textContent = d.mah || 'Autorizat ANMDMR';
+          }
+        }).catch(()=>{});
+    } catch(e){}
+  }openModal(d.name+' '+d.strength,'FIȘĂ DEMO · PRODUS FICTIV',`<div class="rowtitle">${badge(d)}</div><p>Prezentare fictivă pentru testarea interfeței. Nu reprezintă un produs autorizat și nu conține recomandări medicale.</p><div class="details"><div><small>Substanță activă</small>${d.dci}</div><div><small>Concentrație</small>${d.strength}</div><div><small>Formă</small>${d.form}</div><div><small>Cod ATC ilustrativ</small>${d.atc}</div><div><small>Deținător autorizație (MAH)</small><span id="modal-mah-val">${d.mah || (d.id.startsWith('M') ? 'Se încarcă...' : 'DEMO-' + d.id.toUpperCase())}</span></div><div><small>Stoc în farmacii</small>Necunoscut</div></div><div class="clinical-grid"><div class="clinical-card" style="cursor:pointer" id="detail-subst-card"><img src="spot-icons/substitution.png" alt="" aria-hidden="true"><div><div class="clinical-card-kicker">ALTERNATIVE DCI</div><div class="clinical-card-title">Prezentări cu ${d.dci}</div></div></div><div class="clinical-card" style="cursor:pointer" id="detail-presc-card"><img src="spot-icons/prescription.png" alt="" aria-hidden="true"><div><div class="clinical-card-kicker">GHID PRESCRIERE</div><div class="clinical-card-title">Posologie & RCP: ${d.form}</div></div></div></div><h3>Istoricul disponibilității</h3>${d.event?`<div class="timeline"><div><small>09 sept. 2026 · Scenariu demonstrativ</small>Notificare introdusă în radar</div><div><small>${d.date} · Dată fictivă</small>${d.event}</div></div><p>${d.note}</p>`:'<p>Nu avem evenimente pentru acest produs demo. Lipsa unei alerte nu confirmă disponibilitatea.</p>'}<div class="modalfoot"><button id="detail-follow" class="btn primary">${icon(followed.includes(id)?'check':'plus')}${followed.includes(id)?'Nu mai urmări':'Urmărește medicamentul'}</button><button id="same-dci" class="btn">Compară prezentări ${icon('arrow')}</button><a class="btn" href="${sourceUrls.nomen}" target="_blank" rel="noopener">Deschide nomenclatorul ↗</a></div>`);$('#detail-follow').onclick=()=>{follow(id);detail(id)};$('#same-dci').onclick=()=>{$('#modal').close();query=d.dci;selected=[id];navigate('catalog')};if($('#detail-subst-card'))$('#detail-subst-card').onclick=()=>{$('#modal').close();query=d.dci;navigate('catalog')};if($('#detail-presc-card'))$('#detail-presc-card').onclick=()=>toast(`RCP și ghid oficial pentru ${d.name} (${d.form}) deschis.`);}
 function settings(){openModal('Alerte care contează pentru tine','PREFERINȚE · SALVARE LOCALĂ',`<p>Alege tipurile de evenimente pentru lista ta. În acest prototip, notificările se pot doar previzualiza.</p><form id="prefs-form"><label class="checkline"><input class="tick" name="temporary" type="checkbox" ${prefs.temporary?'checked':''}>Discontinuități temporare</label><label class="checkline"><input class="tick" name="permanent" type="checkbox" ${prefs.permanent?'checked':''}>Discontinuități permanente</label><label class="checkline"><input class="tick" name="resumed" type="checkbox" ${prefs.resumed?'checked':''}>Reluări de comercializare</label><label class="field">Frecvență dorită în produsul final<select name="frequency"><option value="daily" ${prefs.frequency==='daily'?'selected':''}>Rezumat zilnic</option><option value="immediate" ${prefs.frequency==='immediate'?'selected':''}>La fiecare schimbare</option><option value="weekly" ${prefs.frequency==='weekly'?'selected':''}>Rezumat săptămânal</option></select></label><button class="btn primary" type="submit">Salvează și previzualizează ${icon('arrow')}</button></form>`);$('#prefs-form').onsubmit=e=>{e.preventDefault();const f=new FormData(e.target);prefs={frequency:f.get('frequency'),temporary:f.has('temporary'),permanent:f.has('permanent'),resumed:f.has('resumed')};save('medora-prefs',prefs);let list=drugs.filter(d=>followed.includes(d.id)&&prefs[d.status]);openModal('Preferințe salvate','PREVIZUALIZARE · NU SE TRIMITE',`<p>Ritm selectat: ${({daily:'zilnic',weekly:'săptămânal',immediate:'la fiecare schimbare'})[prefs.frequency]}. ${list.length} evenimente demo corespund listei și preferințelor tale.</p><div class="panel">${alertrows(list)}</div><p style="margin-top:18px">Trimiterea emailurilor și notificărilor push necesită implementarea serviciului.</p>`);bindRows()};}
 function compare(){if(selected.length!==2)return;const a=get(selected[0]),b=get(selected[1]);const isSameDci=a.dci===b.dci;const isSameStrength=a.strength===b.strength;const isSameForm=a.form===b.form;openModal('Comparație de prezentări','DATE DEMO · FĂRĂ ECHIVALENȚĂ CLINICĂ',`<p>Aceeași substanță, concentrație și formă nu garantează interschimbabilitatea. Exemplu de comparație administrativă.</p><div class="tablewrap"><table><thead><tr><th>Câmp</th><th>${a.name}</th><th>${b.name}</th></tr></thead><tbody>${[['DCI',a.dci,b.dci],['Concentrație',a.strength,b.strength],['Formă',a.form,b.form],['ATC',a.atc,b.atc],['Statut',badge(a),badge(b)],['Stoc local','Necunoscut','Necunoscut']].map(r=>`<tr>${r.map(v=>`<td>${v}</td>`).join('')}</tr>`).join('')}</tbody></table></div><div class="clinical-compare-box"><img src="${isSameDci?'spot-icons/substitution.png':'spot-icons/interactions.png'}" alt="" aria-hidden="true"><div><div class="clinical-card-kicker">${isSameDci?'ANALIZĂ SUBSTITUȚIE BIOECHIVALENȚĂ':'VERIFICARE ASOCIERE & INTERACȚIUNI'}</div><div class="clinical-card-title">${isSameDci?(isSameStrength&&isSameForm?`Potențial de substituție generică directă: ambele conțin ${a.dci} ${a.strength}.`:`Aceeași substanță activă (${a.dci}), dar formele sau concentrațiile diferă.`):`Asociere terapeutică între ${a.dci} și ${b.dci}.`}</div><small style="display:block;margin-top:4px;color:var(--theme-muted,#75817a);line-height:1.4">${isSameDci?'Înainte de eliberare, consultați lista oficială a medicamentelor generice interschimbabile aprobată de ANMDMR.':'Nu au fost semnalate contraindicații majore de asociere în ghidul demonstrativ curent.'}</small></div></div><div class="result" style="margin-top:14px">${isSameDci&&isSameStrength&&isSameForm?'DCI, concentrație și formă coincid în setul demo.':'Prezentările diferă. Nu sunt marcate drept echivalente.'}</div>`)}
 function bindRows(){document.querySelectorAll('[data-detail]').forEach(b=>b.onclick=()=>detail(b.dataset.detail));document.querySelectorAll('[data-follow]').forEach(b=>b.onclick=()=>follow(b.dataset.follow));document.querySelectorAll('[data-select]').forEach(b=>b.onchange=()=>{let id=b.dataset.select;if(b.checked&&selected.length===2){b.checked=false;toast('Poți compara două prezentări simultan.');return}selected=b.checked?[...selected,id]:selected.filter(x=>x!==id);updateCatalog()})}
-function bind(){document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>{query='';navigate(b.dataset.go)});document.querySelectorAll('[data-settings]').forEach(b=>b.onclick=settings);document.querySelectorAll('[data-filter]').forEach(b=>b.onclick=()=>{filter=b.dataset.filter;document.querySelectorAll('[data-filter]').forEach(c=>{c.classList.toggle('active',c.dataset.filter===filter);c.setAttribute('aria-pressed',c.dataset.filter===filter)});filterAlerts()});bindRows();if($('#hero-search'))$('#hero-search').onsubmit=e=>{e.preventDefault();query=new FormData(e.target).get('q').trim();navigate('catalog')};document.querySelectorAll('[data-search]').forEach(b=>b.onclick=()=>{query=b.dataset.search;navigate('catalog')});if($('#catalog-query')){$('#catalog-query').value=query;$('#catalog-query').oninput=e=>{query=e.target.value;updateCatalog()};updateCatalog()}if($('#only-followed'))$('#only-followed').onchange=filterAlerts;if($('#bmi-form'))$('#bmi-form').onsubmit=e=>{e.preventDefault();let f=new FormData(e.target),w=Number(f.get('weight')),h=Number(f.get('height'));if(!Number.isFinite(w)||!Number.isFinite(h)||w<=0||h<=0)return;let r=w/((h/100)**2);$('#bmi-result').innerHTML=`<strong>${r.toLocaleString('ro-RO',{maximumFractionDigits:1})}</strong> kg/m²<br><span class="sub">${w} kg / (${h/100} m)² · rezultat matematic, fără interpretare clinică.</span>`};
+function bind(){document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>{query='';navigate(b.dataset.go)});document.querySelectorAll('[data-settings]').forEach(b=>b.onclick=settings);document.querySelectorAll('[data-filter]').forEach(b=>b.onclick=()=>{filter=b.dataset.filter;document.querySelectorAll('[data-filter]').forEach(c=>{c.classList.toggle('active',c.dataset.filter===filter);c.setAttribute('aria-pressed',c.dataset.filter===filter)});filterAlerts()});bindRows();if($('#hero-search'))$('#hero-search').onsubmit=e=>{e.preventDefault();query=new FormData(e.target).get('q').trim();navigate('catalog')};document.querySelectorAll('[data-search]').forEach(b=>b.onclick=()=>{query=b.dataset.search;navigate('catalog')});let searchDebounceTimer = null;
+if($('#catalog-query')){
+  $('#catalog-query').value = query;
+  $('#catalog-query').oninput = e => {
+    query = e.target.value;
+    clearTimeout(searchDebounceTimer);
+    searchDebounceTimer = setTimeout(() => {
+      updateCatalog();
+    }, 280);
+  };
+  updateCatalog();
+}if($('#only-followed'))$('#only-followed').onchange=filterAlerts;if($('#bmi-form'))$('#bmi-form').onsubmit=e=>{e.preventDefault();let f=new FormData(e.target),w=Number(f.get('weight')),h=Number(f.get('height'));if(!Number.isFinite(w)||!Number.isFinite(h)||w<=0||h<=0)return;let r=w/((h/100)**2);$('#bmi-result').innerHTML=`<strong>${r.toLocaleString('ro-RO',{maximumFractionDigits:1})}</strong> kg/m²<br><span class="sub">${w} kg / (${h/100} m)² · rezultat matematic, fără interpretare clinică.</span>`};
 if($('#interactions-standalone-form')) {
   $('#interactions-standalone-form').onsubmit = e => {
     e.preventDefault();
