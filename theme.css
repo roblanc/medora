@@ -1536,7 +1536,7 @@ body.medora-app .sidebar .brand {
   --marker-length: 16px;
   --marker-gap: 8px;
   --tick-scale: 0.45;
-  --max-shift: 8px;
+  --max-shift: 4px;
   --item-gap: 4px;
   --smoothing: 100ms;
 
@@ -1548,8 +1548,34 @@ body.medora-app .sidebar .brand {
 }
 
 @media (min-width: 621px) {
+  body.medora-app .sidebar {
+    width: 240px !important;
+    min-width: 240px !important;
+    max-width: 240px !important;
+    height: 100dvh !important;
+    position: fixed !important;
+    inset: 0 auto 0 0 !important;
+    box-sizing: border-box !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    padding: 24px 14px 18px !important;
+    z-index: 10 !important;
+    background: #fafbfc !important;
+    border-right: 1px solid #eaecf0 !important;
+  }
+
+  body.medora-app .app {
+    margin-left: 240px !important;
+    box-sizing: border-box !important;
+    min-width: 0 !important;
+  }
+
   .sidebar .nav {
     padding-left: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
   }
 
   .sidebar .nav button.line-sidebar__item {
@@ -1557,22 +1583,26 @@ body.medora-app .sidebar .brand {
     cursor: pointer !important;
     border: none !important;
     background: transparent !important;
-    padding: 7px 10px 7px 8px !important;
+    padding: 7px 10px !important;
     border-radius: 9px !important;
     width: 100% !important;
+    max-width: 100% !important;
     text-align: left !important;
     display: flex !important;
     align-items: center !important;
     box-sizing: border-box !important;
+    overflow: hidden !important;
     transition: background-color 0.2s ease !important;
   }
 
   .sidebar .nav button.line-sidebar__item:hover {
     background: rgba(0, 0, 0, 0.035) !important;
+    --effect: 1;
   }
 
   .sidebar .nav button.line-sidebar__item.active {
-    background: color-mix(in srgb, var(--accent-color) 7%, transparent) !important;
+    background: #edf5f0 !important;
+    color: #246951 !important;
   }
 
   /* Leading Marker Line & Ticks (Removed as requested) */
@@ -1586,10 +1616,14 @@ body.medora-app .sidebar .brand {
 
   /* Content with Proximity Shift */
   .line-sidebar__content {
-    display: inline-flex !important;
+    display: flex !important;
     align-items: center !important;
-    gap: 10px !important;
+    gap: 8px !important;
     width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
     transform: translateX(calc(var(--effect, 0) * var(--max-shift))) !important;
     color: color-mix(in srgb, var(--accent-color) calc(var(--effect, 0) * 100%), var(--text-color)) !important;
     font-weight: calc(520 + var(--effect, 0) * 140) !important;
@@ -1613,8 +1647,54 @@ body.medora-app .sidebar .brand {
   }
 
   .line-sidebar__text {
-    font-size: 13.5px !important;
+    font-size: 13px !important;
     letter-spacing: -0.01em !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+  }
+
+  .sidebar .nav button.line-sidebar__item .count {
+    flex-shrink: 0 !important;
+    margin-left: auto !important;
+  }
+
+  .sidebar .nav button.line-sidebar__item .nav-ext-arrow,
+  .sidebar .nav button.line-sidebar__item span[style*="margin-left:auto"],
+  .sidebar .nav button.line-sidebar__item span[style*="margin-left: auto"] {
+    flex-shrink: 0 !important;
+    margin-left: auto !important;
+    font-size: 11px !important;
+    opacity: 0.65 !important;
+    display: inline-block !important;
+  }
+
+  /* Bottom section safeguarding */
+  body.medora-app .sidebar .sidebar-bottom {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
+  }
+  body.medora-app .sidebar .country,
+  body.medora-app .sidebar .profile {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
+    min-width: 0 !important;
+  }
+  body.medora-app .sidebar .profile-info {
+    min-width: 0 !important;
+    flex: 1 1 auto !important;
+    overflow: hidden !important;
+  }
+  body.medora-app .sidebar .profile-info div,
+  body.medora-app .sidebar .profile-info small {
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
     white-space: nowrap !important;
   }
 
@@ -1637,17 +1717,6 @@ body.medora-app .topbar {
 body.medora-app .sidebar {
   background: #fafbfc !important;
   border-right: 1px solid #eaecf0 !important;
-}
-body.medora-app .sidebar .nav {
-  padding-left: 0 !important;
-}
-body.medora-app .sidebar .nav button.line-sidebar__item {
-  padding: 8px 12px !important;
-  border-radius: 10px !important;
-}
-body.medora-app .sidebar .nav button.line-sidebar__item.active {
-  background: #edf5f0 !important;
-  color: #246951 !important;
 }
 
 /* ==========================================================================
