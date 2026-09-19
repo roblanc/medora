@@ -1,54 +1,75 @@
-/* Mobile landing hierarchy: title, quick-access modules, then search. */
+.home .hero .search button{
+  flex-shrink:0;
+  min-width:0;
+  padding-inline:14px;
+}
+.home .open-app{
+  max-width:46vw;
+}
+.home .open-app span{
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.home .module-card-label{
+  overflow-wrap:anywhere;
+  max-width:100%;
+}
+.home .precision-badge{
+  max-width:calc(100% - 24px);
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
 @media (max-width: 620px) {
-  .home .hero {
-    display: block;
-    padding-top: 28px;
-  }
+ .home .hero {
+ display: block;
+ padding-top: 28px;
+ }
 
-  .home .hero-copy {
-    width: 100%;
-  }
+ .home .hero-copy {
+ width: 100%;
+ }
 
-  .home #hero-title {
-    margin-bottom: 24px;
-  }
+ .home #hero-title {
+ margin-bottom: 24px;
+ }
 
-  .home .hero-copy > .modules-grid {
-    width: 100%;
-    max-width: 430px;
-    margin: 0 auto 30px;
-    gap: 14px 8px;
-  }
+ .home .hero-copy > .modules-grid {
+ width: 100%;
+ max-width: 430px;
+ margin: 0 auto 30px;
+ gap: 14px 8px;
+ }
 
-  .home .hero-copy > .modules-grid .module-card {
-    min-width: 0;
-    padding: 4px 2px;
-  }
+ .home .hero-copy > .modules-grid .module-card {
+ min-width: 0;
+ padding: 4px 2px;
+ }
 
-  .home .hero-copy > .modules-grid .module-card-icon {
-    width: 72px;
-    height: 72px;
-  }
+ .home .hero-copy > .modules-grid .module-card-icon {
+ width: 72px;
+ height: 72px;
+ }
 
-  .home .hero-copy > .modules-grid .module-card-icon img {
-    width: 68px;
-    height: 68px;
-  }
+ .home .hero-copy > .modules-grid .module-card-icon img {
+ width: 68px;
+ height: 68px;
+ }
 
-  .home .hero-copy > .modules-grid .module-card-label {
-    font-size: 12px;
-  }
+ .home .hero-copy > .modules-grid .module-card-label {
+ font-size: 12px;
+ }
 
-  .home .hero .search-area {
-    width: 100%;
-    margin: 0 auto;
-  }
+ .home .hero .search-area {
+ width: 100%;
+ margin: 0 auto;
+ }
 
-  .home .hero .source-note {
-    margin-top: 14px;
-  }
+ .home .hero .source-note {
+ margin-top: 14px;
+ }
 
-  .home .frequent-tags {
-    margin-top: 16px;
-  }
+ .home .frequent-tags {
+ margin-top: 16px;
+ }
 }

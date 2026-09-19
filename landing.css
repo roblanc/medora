@@ -1,0 +1,210 @@
+/* Landing — same clinical atmosphere as #overview */
+
+.landing-page {
+  margin: 0;
+  min-height: 100dvh;
+}
+
+.landing-stage {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 22px 120px;
+}
+
+.landing-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 0 14px;
+  background: color-mix(in srgb, var(--paper, #f4f5f1) 82%, transparent);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid transparent;
+}
+
+.landing-topbar .brand {
+  font-size: 28px;
+  font-weight: 650;
+  letter-spacing: -1.4px;
+  color: var(--ink, #181817);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.landing-topbar .brandmark {
+  width: 28px;
+  height: 36px;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+.landing-topbar .brandmark img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.landing-top-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.landing-enter {
+  text-decoration: none;
+}
+
+.landing-boot {
+  color: var(--muted, #5c665f);
+  padding: 48px 0;
+}
+
+.landing-main .heading {
+  animation: landing-rise 0.55s cubic-bezier(0.22, 0.8, 0.22, 1) both;
+}
+
+.landing-main .provenance-rail {
+  animation: landing-rise 0.55s cubic-bezier(0.22, 0.8, 0.22, 1) 0.06s both;
+}
+
+.landing-main .hero-grid {
+  animation: landing-rise 0.6s cubic-bezier(0.22, 0.8, 0.22, 1) 0.12s both;
+}
+
+.landing-main .stats {
+  animation: landing-rise 0.6s cubic-bezier(0.22, 0.8, 0.22, 1) 0.18s both;
+}
+
+.landing-main .lower-grid {
+  animation: landing-rise 0.65s cubic-bezier(0.22, 0.8, 0.22, 1) 0.24s both;
+}
+
+.landing-main .hero,
+.landing-main .pulsecard,
+.landing-main .stat {
+  background: transparent !important;
+  box-shadow: none !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+}
+
+.landing-main .hero-spot,
+.landing-main .pulse-spot {
+  animation: landing-float 4.8s ease-in-out infinite;
+}
+
+.landing-main .pulse-spot {
+  animation-delay: 0.6s;
+}
+
+.landing-main .stat-spot {
+  animation: landing-pop 0.7s cubic-bezier(0.22, 0.8, 0.22, 1) both;
+}
+
+.landing-main .stat:nth-child(2) .stat-spot { animation-delay: 0.08s; }
+.landing-main .stat:nth-child(3) .stat-spot { animation-delay: 0.16s; }
+
+.landing-cta-band {
+  margin: 28px 0 8px;
+  padding: 22px 0 6px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  border-top: 1px solid var(--line, #d5dbd6);
+  animation: landing-rise 0.65s cubic-bezier(0.22, 0.8, 0.22, 1) 0.3s both;
+}
+
+.landing-cta-band p {
+  margin: 0;
+  max-width: 420px;
+  color: var(--muted, #5c665f);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.landing-cta-band strong {
+  display: block;
+  color: var(--ink, #181817);
+  font-size: 16px;
+  margin-bottom: 4px;
+}
+
+.landing-fab {
+  position: fixed;
+  right: 20px;
+  bottom: 22px;
+  z-index: 40;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 52px;
+  padding: 0 20px;
+  border-radius: 999px;
+  background: #181817;
+  color: #fff;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 650;
+  box-shadow: 0 16px 40px rgba(24, 24, 23, 0.28);
+  animation: landing-fab 0.7s cubic-bezier(0.22, 0.8, 0.22, 1) 0.45s both;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.landing-fab:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 20px 48px rgba(24, 24, 23, 0.34);
+  color: #fff;
+}
+
+.landing-fab i {
+  font-size: 16px;
+}
+
+@keyframes landing-rise {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes landing-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes landing-pop {
+  from { opacity: 0; transform: scale(0.86) translateY(8px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+@keyframes landing-fab {
+  from { opacity: 0; transform: translateY(18px) scale(0.96); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@media (max-width: 720px) {
+  .landing-stage { padding: 0 14px 110px; }
+  .landing-top-actions .prototype { display: none; }
+  .landing-fab { left: 14px; right: 14px; justify-content: center; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .landing-main .heading,
+  .landing-main .provenance-rail,
+  .landing-main .hero-grid,
+  .landing-main .stats,
+  .landing-main .lower-grid,
+  .landing-main .hero-spot,
+  .landing-main .pulse-spot,
+  .landing-main .stat-spot,
+  .landing-cta-band,
+  .landing-fab {
+    animation: none !important;
+  }
+}

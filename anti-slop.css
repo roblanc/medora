@@ -165,8 +165,8 @@ body.medora-app .hero {
 
 body.medora-app .pulsecard {
   padding: 28px 24px 26px 30px;
-  background: #eef2ee !important;
-  border-left: 1px solid var(--clinical-line);
+  background: transparent !important;
+  border-left: 0 !important;
 }
 
 .medora-app .hero:hover,
@@ -241,19 +241,18 @@ body.medora-app .pulsecard {
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 0;
   margin: 0 0 36px;
-  border-bottom: 1px solid var(--clinical-line);
+  border-bottom: 0;
+  background: transparent !important;
 }
 
 body.medora-app .stat {
-  min-height: 108px;
-  padding: 20px 22px;
-  border: 0;
-  border-right: 1px solid var(--clinical-line);
-  border-radius: 0;
   background: transparent !important;
-  box-shadow: none;
-  backdrop-filter: none;
-  transform: none !important;
+  background-color: transparent !important;
+  border: 0 !important;
+  border-right: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
 }
 
 .medora-app .stat:first-child {
@@ -266,7 +265,7 @@ body.medora-app .stat {
 
 .medora-app .stat:hover {
   box-shadow: none;
-  background: rgba(255, 255, 255, 0.32);
+  background: transparent !important;
 }
 
 .medora-app .stat-spot {
@@ -446,14 +445,15 @@ body.medora-app .panel {
   .medora-app .stat:first-child {
     min-height: 0;
     padding: 14px 0;
-    border-right: 0;
-    border-bottom: 1px solid var(--clinical-line);
+    border-right: 0 !important;
+    border-bottom: 0 !important;
+    background: transparent !important;
     display: grid;
     grid-template-columns: 42px 1fr;
   }
 
   .medora-app .stat:last-child {
-    border-bottom: 0;
+    border-bottom: 0 !important;
   }
 }
 
@@ -465,5 +465,69 @@ body.medora-app .panel {
     transition-duration: 0.01ms !important;
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
+  }
+}
+
+/* Overflow hardening — long labels must not spill cards/buttons */
+.medora-app .watchrow .info {
+  min-width: 0;
+}
+.medora-app .watchrow .info .plain,
+.medora-app .rowtitle .plain,
+.medora-app .col-drug .drug-title {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  white-space: normal;
+  text-align: left;
+}
+.medora-app .alerttext p {
+  overflow-wrap: anywhere;
+}
+.medora-app .pulse-copy h2,
+.medora-app .hero-copy h2 {
+  overflow-wrap: anywhere;
+  max-width: 100%;
+}
+.medora-app .section-head {
+  flex-wrap: wrap;
+  align-items: baseline;
+}
+.medora-app .section-head h2 {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+.medora-app .section-head .linkbutton {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+.medora-app .btn,
+.medora-app .chip {
+  max-width: 100%;
+  box-sizing: border-box;
+}
+.medora-app .nav button {
+  overflow: hidden;
+}
+.medora-app .nav-label-mobile,
+.medora-app .nav-label-full {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+@media (max-width: 620px) {
+  .medora-app .nav button {
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+  .medora-app .section-head .linkbutton {
+    font-size: 10px;
+  }
+  .medora-app .pulse-copy {
+    max-width: 100%;
+  }
+  .medora-app .heading {
+    flex-wrap: wrap;
+    gap: 10px;
   }
 }

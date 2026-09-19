@@ -231,7 +231,6 @@ body:not(.cinematic-page),
 body.medora-app .sidebar,
 body.medora-app .topbar,
 body.medora-app .panel,
-body.medora-app .stat,
 body.medora-app .iconbtn,
 body.medora-app .btn,
 body.medora-app .searchbox,
@@ -242,10 +241,17 @@ body.medora-app dialog {
   background-color: var(--theme-surface) !important;
 }
 
+body.medora-app .stat {
+  background: transparent !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+}
+
 body.medora-app .btn.primary {
-  background-color: var(--theme-deep, #193d35) !important;
+  background-color: #181817 !important;
   color: #ffffff !important;
-  border-color: var(--theme-deep, #193d35) !important;
+  border-color: #181817 !important;
 }
 
 body.medora-app .btn.primary:disabled {
@@ -258,14 +264,22 @@ body.medora-app .btn.primary:disabled {
 
 body.medora-app .sidebar { border-color: var(--theme-line) !important; }
 body.medora-app .nav button.active,
-body.medora-app .pulsecard,
 body.medora-app .comparebar,
 body.medora-app .result,
 body.medora-app .details { background: var(--theme-accent-soft) !important; }
+body.medora-app .pulsecard {
+  background: transparent !important;
+  background-color: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
 body.medora-app .hero {
-  background: color-mix(in srgb, var(--theme-surface) 76%, transparent) !important;
+  background: transparent !important;
+  background-color: transparent !important;
   color: var(--theme-deep) !important;
-  border-color: color-mix(in srgb, var(--theme-surface) 92%, transparent) !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
 }
 body.medora-app .hero .eyebrow { color: var(--theme-accent) !important; }
 body.medora-app .brandmark { background: var(--theme-deep) !important; color: var(--theme-secondary) !important; }

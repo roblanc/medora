@@ -2,6 +2,7 @@
 <html lang="ro" data-medora-no-appearance-ui>
 <head>
   <meta charset="utf-8">
+  <base href="./">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#f5f2ec" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
@@ -702,14 +703,14 @@
     </style>
   <link rel="stylesheet" href="theme.css?v=9">
   <link rel="stylesheet" href="intro.css?v=1">
-  <link rel="stylesheet" href="landing-mobile.css?v=1">
+  <link rel="stylesheet" href="landing-mobile.css?v=2">
   <script src="theme.js?v=9" defer></script>
 </head>
 <body>
   <script src="intro.js?v=1"></script>
   <main class="home">
     <header class="topbar">
-      <a class="brand" href="index.html" aria-label="Medora, pagina principală"><span class="brand-mark"><img src="capsule-hero.png" alt="" aria-hidden="true"></span>medora</a>
+      <a class="brand" href="/" aria-label="Medora, pagina principală"><span class="brand-mark"><img src="capsule-hero.png" alt="" aria-hidden="true"></span>medora</a>
       <div class="top-actions"><span class="market"><i data-lucide="map-pin"></i> România</span><a class="user-top-profile" id="top-auth-link" href="medora.html#overview" title="Profil activ: Dr. Andrei Popescu">
         <div class="heroui-avatar heroui-avatar-topbar" id="top-user-avatar" style="background: radial-gradient(circle at 32% 28%, #bbf7d0 0%, #38bdf8 36%, #818cf8 68%, #4f46e5 100%);">
           <span id="top-user-initials">AP</span>
@@ -720,7 +721,7 @@
       <div class="hero-copy reveal">
         <h1 id="hero-title">Găsește rapid <span>informații despre</span> medicamente</h1>
         <div class="search-area">
-          <form class="search" id="search-form" action="medora.html#catalog" method="get">
+          <form class="search" id="search-form" action="medora.html" method="get">
             <i data-lucide="search"></i>
             <input id="medicine-search" name="q" aria-label="Caută medicamente" placeholder="Medicament, substanță sau cod ATC" autocomplete="off" aria-controls="suggestions" aria-expanded="false">
             <button type="submit"><span>Caută</span><i data-lucide="arrow-right"></i></button>
@@ -1506,6 +1507,12 @@
     function closeSuggestions(){suggestions.hidden=true;input.setAttribute('aria-expanded','false')}
     function showSuggestions(value=''){const query=value.trim().toLocaleLowerCase('ro');const results=medicines.filter(item=>`${item.name} ${item.meta}`.toLocaleLowerCase('ro').includes(query)).slice(0,4);if(!results.length)return closeSuggestions();suggestions.innerHTML=results.map(item=>`<button class="suggestion" type="button" role="option" data-value="${item.query}"><img src="spot-icons/medicine.png?v=2" alt="" aria-hidden="true" style="width:24px;height:24px;object-fit:contain;flex-shrink:0"><span>${item.name}<small>${item.meta}</small></span></button>`).join('');suggestions.hidden=false;input.setAttribute('aria-expanded','true');renderIcons()}
     input.addEventListener('focus',()=>showSuggestions(input.value));input.addEventListener('input',()=>showSuggestions(input.value));input.addEventListener('keydown',event=>{if(event.key==='Escape')closeSuggestions()});suggestions.addEventListener('click',event=>{const option=event.target.closest('[data-value]');if(!option)return;input.value=option.dataset.value;closeSuggestions();document.querySelector('#search-form').requestSubmit()});document.addEventListener('click',event=>{if(!event.target.closest('.search-area'))closeSuggestions()});document.querySelectorAll('.frequent-chip').forEach(chip=>{chip.addEventListener('click',()=>{input.value=chip.dataset.search;document.querySelector('#search-form').requestSubmit()})});
+    document.querySelector('#search-form').addEventListener('submit',event=>{
+      event.preventDefault();
+      const q=(input.value||'').trim();
+      const url=q?`medora.html?q=${encodeURIComponent(q)}#catalog`:'medora.html#catalog';
+      location.href=url;
+    });
 
     const mobileHeroQuery=window.matchMedia('(max-width: 620px)');
     const syncMobileHeroOrder=event=>{

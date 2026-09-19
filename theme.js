@@ -154,8 +154,18 @@
     catch (_) {}
   };
 
-  const selected = validMode(document.documentElement.dataset.medoraAppearance || getSavedMode());
+  // Clinical workspace stays light for readability (anti-slop paper + ink).
+  // System/dark mode is for marketing/cinematic pages only.
+  const isClinicalApp = () => document.body?.classList.contains('medora-app')
+    || document.documentElement.dataset.medoraWorkspace === 'clinical';
+
+  const selected = isClinicalApp()
+    ? 'light'
+    : validMode(document.documentElement.dataset.medoraAppearance || getSavedMode());
   document.documentElement.dataset.medoraAppearance = selected;
+  if (isClinicalApp()) {
+    try { localStorage.setItem(storageKey, 'light'); } catch (_) {}
+  }
 
   // No appearance control in the web pages: the palette follows the system, and
   // the switch lives in the app, where someone is already changing settings.

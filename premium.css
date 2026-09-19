@@ -1,0 +1,715 @@
+/**
+ * Medora clinical app — premium contrast lock + Tailwind-aligned tokens.
+ * Guarantees WCAG AA text on light surfaces regardless of OS dark mode.
+ */
+
+html[data-medora-appearance="light"],
+body.medora-app {
+  color-scheme: light !important;
+  --theme-base: #f4f5f1;
+  --theme-surface: #ffffff;
+  --theme-wash-1: #f0f4ef;
+  --theme-wash-2: #e8f0f7;
+  --theme-wash-3: #f8eee9;
+  --theme-accent: #176b5a;
+  --theme-accent-soft: #dfece7;
+  --theme-secondary: #8c6a9f;
+  --theme-deep: #181817;
+  --theme-muted: rgba(24, 24, 23, 0.68);
+  --theme-line: rgba(24, 24, 23, 0.12);
+  --theme-brand-paper: #fbfaf7;
+  --theme-brand-ink: #181817;
+  --ink: #181817;
+  --muted: #5c665f;
+  --line: #d5dbd6;
+  --paper: #f4f5f1;
+  --white: #ffffff;
+  --green: #176b5a;
+  --lime: #dfece7;
+  --red: #a84b39;
+  --orange: #9a6b16;
+}
+
+body.medora-app {
+  color: var(--ink) !important;
+  background-color: var(--paper) !important;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* ——— Typography hierarchy ——— */
+body.medora-app h1,
+body.medora-app h2,
+body.medora-app h3,
+body.medora-app .heading h1,
+body.medora-app .hero h2,
+body.medora-app .pulsecard h2,
+body.medora-app #modal-title,
+body.medora-app .brand,
+body.medora-app .plain,
+body.medora-app .drug-title,
+body.medora-app .clinical-card-title,
+body.medora-app .toolcard h2,
+body.medora-app .sourcecard h3,
+body.medora-app .section-head h2,
+body.medora-app .stat strong,
+body.medora-app .metriclabel {
+  color: var(--ink) !important;
+}
+
+body.medora-app .sub,
+body.medora-app .eyebrow,
+body.medora-app .tagline,
+body.medora-app .navlabel,
+body.medora-app .alerttext p,
+body.medora-app .source-note,
+body.medora-app .footer,
+body.medora-app .clinical-card-kicker,
+body.medora-app .toolcard .sub,
+body.medora-app .stat small,
+body.medora-app .drug-dci,
+body.medora-app .alertmeta,
+body.medora-app .crumb {
+  color: var(--muted) !important;
+}
+
+body.medora-app .hero .eyebrow,
+body.medora-app .pulsecard .eyebrow {
+  color: #6b4f7a !important;
+}
+
+/* ——— Surfaces: always light paper, never dark OS bleed ——— */
+body.medora-app .sidebar,
+body.medora-app .topbar,
+body.medora-app .panel,
+body.medora-app .iconbtn,
+body.medora-app .btn:not(.primary):not(.lime),
+body.medora-app .chip:not(.active),
+body.medora-app .searchbox,
+body.medora-app .field input,
+body.medora-app .field select,
+body.medora-app dialog,
+body.medora-app .catalog-row {
+  background-color: var(--white) !important;
+  color: var(--ink) !important;
+  border-color: var(--line) !important;
+}
+
+/* Stats sit on the page grid — no white card */
+body.medora-app .stat {
+  background: transparent !important;
+  background-color: transparent !important;
+  border: 0 !important;
+  border-right: 1px solid var(--line) !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+}
+
+body.medora-app .stat:last-child {
+  border-right: 0 !important;
+}
+
+body.medora-app .stat:hover {
+  background: transparent !important;
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+body.medora-app .hero {
+  background: transparent !important;
+  background-color: transparent !important;
+  color: var(--ink) !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+}
+
+body.medora-app .hero:hover {
+  background: transparent !important;
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+body.medora-app .pulsecard {
+  background: transparent !important;
+  background-color: transparent !important;
+  color: var(--ink) !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+}
+
+body.medora-app .pulsecard:hover {
+  background: transparent !important;
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+body.medora-app .nav button {
+  color: #5a635c !important;
+}
+
+body.medora-app .nav button.active {
+  color: var(--ink) !important;
+  background: rgba(255, 255, 255, 0.72) !important;
+}
+
+/* ——— Primary actions: ink ground + white type (never inverted by dark tokens) ——— */
+body.medora-app .btn.primary,
+body.medora-app .chip.active,
+body.medora-app .compare-cta {
+  background-color: #181817 !important;
+  color: #ffffff !important;
+  border-color: #181817 !important;
+}
+
+body.medora-app .btn.primary .ph,
+body.medora-app .chip.active .ph,
+body.medora-app .compare-cta .ph {
+  color: #ffffff !important;
+}
+
+body.medora-app .btn.lime {
+  background: #f2dff5 !important;
+  color: #181817 !important;
+  border-color: transparent !important;
+}
+
+/* ——— Forms & search: high-contrast fields ——— */
+body.medora-app .searchbox {
+  background: #ffffff !important;
+  color: var(--ink) !important;
+  border: 1px solid var(--line) !important;
+  box-shadow: 0 8px 24px rgba(24, 24, 23, 0.06);
+}
+
+body.medora-app .field input,
+body.medora-app .field select {
+  color: #181817 !important;
+  background: #f7f8f5 !important;
+  border: 1px solid var(--line) !important;
+}
+
+body.medora-app .searchbox input::placeholder,
+body.medora-app .field input::placeholder {
+  color: #6b746e !important;
+  opacity: 1 !important;
+}
+
+body.medora-app .searchbox .ph,
+body.medora-app .searchbox svg {
+  color: #5c665f !important;
+}
+
+body.medora-app .field input:focus,
+body.medora-app .field select:focus,
+body.medora-app .searchbox:focus-within {
+  outline: 3px solid rgba(23, 107, 90, 0.35);
+  outline-offset: 2px;
+  border-color: #176b5a !important;
+}
+
+/* Soft result panels — readable ink on wash, not white-on-wash */
+body.medora-app .result,
+body.medora-app .details,
+body.medora-app .comparebar,
+body.medora-app .notice,
+body.medora-app .pulsecard,
+body.medora-app .nav button.active {
+  color: var(--ink) !important;
+}
+
+body.medora-app .result {
+  background: #e8f0f7 !important;
+  color: #181817 !important;
+}
+
+body.medora-app .result strong {
+  color: #181817 !important;
+}
+
+body.medora-app .details {
+  background: #f0f4ef !important;
+  color: #181817 !important;
+}
+
+body.medora-app .details small {
+  color: #5c665f !important;
+}
+
+body.medora-app .notice {
+  background: #fbefb5 !important;
+  color: #5c4508 !important;
+}
+
+body.medora-app .comparebar {
+  background: #e5edd8 !important;
+  color: #181817 !important;
+}
+
+/* Status pills stay semantic with dark text on pastel */
+body.medora-app .pill {
+  background: #fbefb5 !important;
+  color: #5c4508 !important;
+}
+
+body.medora-app .pill.red {
+  background: #f8d7e8 !important;
+  color: #7a2450 !important;
+}
+
+body.medora-app .pill.green {
+  background: #dce7bd !important;
+  color: #2f4518 !important;
+}
+
+/* Prototype badge */
+body.medora-app .prototype {
+  background: #dce7f7 !important;
+  color: #1a2740 !important;
+  border-color: #c4d4ea !important;
+}
+
+/* Modal */
+body.medora-app dialog {
+  background: #ffffff !important;
+  color: #181817 !important;
+}
+
+body.medora-app .modalbody,
+body.medora-app .modalbody p {
+  color: var(--muted) !important;
+}
+
+body.medora-app #modal-title {
+  color: #181817 !important;
+}
+
+/* Toast: dark ground, white type */
+body.medora-app .toast {
+  background: #181817 !important;
+  color: #ffffff !important;
+}
+
+/* Links */
+body.medora-app a:not(.btn):not(.btn-source) {
+  color: #176b5a;
+}
+
+body.medora-app a:not(.btn):not(.btn-source):hover {
+  color: #0f5245;
+}
+
+/* Source buttons keep ink on light / white on primary */
+body.medora-app .btn-source {
+  color: #181817 !important;
+}
+
+body.medora-app .btn-source.btn-source-primary {
+  color: #ffffff !important;
+}
+
+/* Catalog desktop table */
+body.medora-app .catalog-table th {
+  color: #5c665f !important;
+  background: #f7f8f4 !important;
+}
+
+body.medora-app .catalog-table td {
+  color: #181817 !important;
+}
+
+/* Soft elevation for interactive surfaces */
+body.medora-app .panel,
+body.medora-app .toolcard,
+body.medora-app .sourcecard {
+  box-shadow: 0 10px 30px rgba(24, 24, 23, 0.04);
+}
+
+/* Focus-visible for keyboard users */
+body.medora-app button:focus-visible,
+body.medora-app a:focus-visible,
+body.medora-app input:focus-visible,
+body.medora-app select:focus-visible {
+  outline: 3px solid #176b5a;
+  outline-offset: 3px;
+}
+
+body.medora-app .drug-dose {
+  font-weight: 650;
+  color: #176b5a;
+}
+
+body.medora-app .meta-dose {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  color: #181817;
+}
+
+body.medora-app .meta-form {
+  font-weight: 600;
+  color: #181817;
+}
+@media (prefers-color-scheme: dark) {
+  body.medora-app .searchbox,
+  body.medora-app .field input,
+  body.medora-app .field select,
+  body.medora-app .catalog-row,
+  body.medora-app .panel {
+    background-color: #ffffff !important;
+    color: #181817 !important;
+  }
+
+  body.medora-app .hero,
+  body.medora-app .pulsecard {
+    background: transparent !important;
+    background-color: transparent !important;
+    color: #181817 !important;
+  }
+
+  body.medora-app .btn.primary {
+    background-color: #181817 !important;
+    color: #ffffff !important;
+  }
+
+  body.medora-app .hero h2,
+  body.medora-app .heading h1,
+  body.medora-app .drug-title {
+    color: #181817 !important;
+  }
+}
+
+/* Journal search + pagination */
+body.medora-app .journal-toolbar {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+body.medora-app .journal-search {
+  width: 100%;
+  max-width: 100%;
+}
+
+body.medora-app .journal-toolbar .filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+body.medora-app .journal-only {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--muted, #5c665f);
+}
+
+body.medora-app .journal-pager {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line, #d5dbd6);
+}
+
+body.medora-app .journal-pager-meta,
+body.medora-app .journal-pager-page {
+  font-size: 11px;
+  color: var(--muted, #5c665f);
+}
+
+body.medora-app .journal-pager-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+@media (max-width: 620px) {
+  body.medora-app .journal-only {
+    margin-left: 0;
+    width: 100%;
+  }
+  body.medora-app .journal-pager {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  body.medora-app .journal-pager-actions {
+    justify-content: space-between;
+  }
+}
+body.medora-app .stats,
+body.medora-app .stats .stat,
+body.medora-app div.stat,
+body.medora-app section.hero,
+body.medora-app section.pulsecard,
+body.medora-app .hero,
+body.medora-app .pulsecard {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+body.medora-app .stats .stat,
+body.medora-app div.stat {
+  border-right: 0 !important;
+  border-bottom: 0 !important;
+}
+
+body.medora-app .hero:hover,
+body.medora-app .pulsecard:hover {
+  background: transparent !important;
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+
+/* ——— Stocuri SER map ——— */
+body.medora-app .stock-meta {
+  margin: -6px 0 16px;
+  color: var(--muted, #5c665f);
+  font-size: 12px;
+}
+
+body.medora-app .stock-search-wrap {
+  position: relative;
+  margin-bottom: 12px;
+}
+
+body.medora-app .stock-examples {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+
+body.medora-app .stock-examples .frequent-label {
+  font-size: 12px;
+  color: var(--muted, #5c665f);
+}
+
+body.medora-app .stock-example {
+  cursor: pointer;
+}
+
+body.medora-app .stock-suggest {
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0;
+  background: #fff;
+  border: 1px solid var(--line, #d5dbd6);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 16px 40px rgba(24, 24, 23, 0.08);
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 12;
+}
+
+body.medora-app .stock-suggest button {
+  width: 100%;
+  text-align: left;
+  border: 0;
+  border-bottom: 1px solid var(--line, #d5dbd6);
+  background: #fff;
+  padding: 12px 14px;
+  cursor: pointer;
+}
+
+body.medora-app .stock-suggest button:hover {
+  background: #eef6f2;
+}
+
+body.medora-app .stock-suggest strong {
+  display: block;
+  font-size: 13px;
+  color: var(--ink, #181817);
+}
+
+body.medora-app .stock-suggest span {
+  display: block;
+  margin-top: 3px;
+  font-size: 11px;
+  color: var(--muted, #5c665f);
+}
+
+body.medora-app .stock-detail-top {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 14px;
+}
+
+body.medora-app .stock-detail-top h2 {
+  margin: 4px 0 6px;
+  font-size: 24px;
+  letter-spacing: -0.03em;
+}
+
+body.medora-app .stock-national {
+  text-align: right;
+  min-width: 140px;
+}
+
+body.medora-app .stock-national strong {
+  display: block;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 28px;
+  font-weight: 600;
+  color: #176b5a;
+  letter-spacing: -0.03em;
+}
+
+body.medora-app .stock-national span {
+  font-size: 11px;
+  color: var(--muted, #5c665f);
+}
+
+body.medora-app .stock-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-bottom: 12px;
+  font-size: 11px;
+  color: var(--muted, #5c665f);
+}
+
+body.medora-app .stock-legend .swatch {
+  width: 12px;
+  height: 12px;
+  display: inline-block;
+  margin-right: 5px;
+  vertical-align: -1px;
+  border-radius: 3px;
+  border: 1px solid rgba(24, 24, 23, 0.08);
+}
+
+body.medora-app .stock-legend .lv0 { background: #d9e0d8; }
+body.medora-app .stock-legend .lv1 { background: #e4c56a; }
+body.medora-app .stock-legend .lv2 { background: #8fbf4d; }
+body.medora-app .stock-legend .lv3 { background: #176b5a; }
+
+body.medora-app .stock-map-wrap {
+  position: relative;
+  margin-bottom: 16px;
+  padding: 12px;
+  border-radius: 16px;
+  background: linear-gradient(180deg, #f3f7f4 0%, #eef3ef 100%);
+  border: 1px solid #d5e4dc;
+}
+
+body.medora-app .stock-map-idle .stock-map {
+  opacity: 0.72;
+}
+
+body.medora-app .stock-map-hint {
+  position: absolute;
+  inset: auto 16px 18px;
+  margin: 0;
+  text-align: center;
+  font-size: 12px;
+  color: #5c665f;
+  pointer-events: none;
+}
+
+body.medora-app .stock-map svg#ro-map,
+body.medora-app .stock-map svg {
+  width: 100% !important;
+  height: auto !important;
+  max-width: 100% !important;
+  max-height: 520px !important;
+  flex-shrink: 1;
+}
+
+body.medora-app .stock-map .ro-county {
+  cursor: pointer;
+  transition: fill 0.18s ease, stroke 0.18s ease, filter 0.18s ease;
+  stroke: #f7faf7;
+  stroke-width: 1.1;
+}
+
+body.medora-app .stock-map .ro-county.lv0 { fill: #d9e0d8; }
+body.medora-app .stock-map .ro-county.lv1 { fill: #e4c56a; }
+body.medora-app .stock-map .ro-county.lv2 { fill: #8fbf4d; }
+body.medora-app .stock-map .ro-county.lv3 { fill: #176b5a; }
+body.medora-app .stock-map-idle .ro-county { fill: #cfd8d2; }
+
+body.medora-app .stock-map .ro-county.is-hot {
+  filter: brightness(1.08);
+  stroke: #181817;
+  stroke-width: 1.6;
+}
+
+body.medora-app .stock-tip {
+  position: absolute;
+  left: 50%;
+  top: 12px;
+  transform: translateX(-50%);
+  z-index: 2;
+  padding: 6px 10px;
+  border-radius: 8px;
+  background: #181817;
+  color: #fff;
+  font-size: 11px;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+body.medora-app .stock-counties {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(148px, 1fr));
+  gap: 8px;
+}
+
+body.medora-app .stock-county {
+  border: 1px solid var(--line, #d5dbd6);
+  border-radius: 10px;
+  padding: 10px 12px;
+  min-height: 64px;
+  background: #f4f6f2;
+}
+
+body.medora-app .stock-county strong {
+  display: block;
+  font-size: 13px;
+  margin-bottom: 4px;
+}
+
+body.medora-app .stock-county span {
+  font-size: 11px;
+  color: var(--muted, #5c665f);
+}
+
+body.medora-app .stock-county.lv0 { background: #eef0eb; color: #6b746d; }
+body.medora-app .stock-county.lv1 { background: #f7e7b3; }
+body.medora-app .stock-county.lv2 { background: #d7ebc4; }
+body.medora-app .stock-county.lv3 { background: #176b5a; color: #f4faf2; }
+body.medora-app .stock-county.lv3 span { color: #d5ebe3; }
+
+body.medora-app .stock-county.flash {
+  outline: 2px solid #176b5a;
+  outline-offset: 2px;
+}
+
+@media (max-width: 720px) {
+  body.medora-app .stock-national { text-align: left; }
+  body.medora-app .stock-map svg { max-height: 360px; }
+}
