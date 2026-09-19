@@ -1363,3 +1363,7 @@ dialog .tablewrap td {
   border-top: none !important;
   font-size: 13.5px !important;
 }
+
+body.medora-app .sidebar .brand {
+  margin-bottom: 20px !important;
+}
