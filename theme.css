@@ -1393,7 +1393,7 @@ body.medora-app .sidebar .brand {
 
 @media (min-width: 621px) {
   .sidebar .nav {
-    padding-left: calc(var(--marker-length) + var(--marker-gap)) !important;
+    padding-left: 0 !important;
   }
 
   .sidebar .nav button.line-sidebar__item {
@@ -1419,33 +1419,13 @@ body.medora-app .sidebar .brand {
     background: color-mix(in srgb, var(--accent-color) 7%, transparent) !important;
   }
 
-  /* Leading Marker Line */
+  /* Leading Marker Line & Ticks (Removed as requested) */
   .line-sidebar__marker {
-    position: absolute !important;
-    top: 50% !important;
-    left: calc(-1 * var(--marker-length) - var(--marker-gap)) !important;
-    height: 2px !important;
-    width: var(--marker-length) !important;
-    background-color: color-mix(in srgb, var(--accent-color) calc(var(--effect, 0) * 100%), var(--marker-color)) !important;
-    transform-origin: left center !important;
-    transform: translateY(-50%) scaleX(calc(0.35 + var(--effect, 0) * 0.8)) !important;
-    border-radius: 2px !important;
-    pointer-events: none !important;
+    display: none !important;
   }
-
-  /* Short static tick in between items */
+  .sidebar .nav button.line-sidebar__item::before,
   .sidebar .nav button.line-sidebar__item:not(:last-child)::after {
-    content: '' !important;
-    position: absolute !important;
-    top: calc(100% + var(--item-gap) / 2) !important;
-    left: calc(-1 * var(--marker-length) - var(--marker-gap)) !important;
-    height: 1px !important;
-    width: calc(var(--marker-length) * var(--tick-scale)) !important;
-    background-color: var(--marker-color) !important;
-    opacity: 0.4 !important;
-    transform-origin: left center !important;
-    transform: translateY(-50%) scaleX(calc(0.5 + var(--effect, 0) * 0.6)) !important;
-    pointer-events: none !important;
+    display: none !important;
   }
 
   /* Content with Proximity Shift */
@@ -1486,4 +1466,30 @@ body.medora-app .sidebar .brand {
   body.medora-app .nav button.active::before {
     display: none !important;
   }
+}
+
+/* Pure White Dashboard Layout */
+body.medora-app {
+  background-color: #ffffff !important;
+  background-image: none !important;
+}
+body.medora-app .topbar {
+  background: rgba(255, 255, 255, 0.96) !important;
+  border-bottom: 1px solid #eaecf0 !important;
+  backdrop-filter: blur(16px) !important;
+}
+body.medora-app .sidebar {
+  background: #fafbfc !important;
+  border-right: 1px solid #eaecf0 !important;
+}
+body.medora-app .sidebar .nav {
+  padding-left: 0 !important;
+}
+body.medora-app .sidebar .nav button.line-sidebar__item {
+  padding: 8px 12px !important;
+  border-radius: 10px !important;
+}
+body.medora-app .sidebar .nav button.line-sidebar__item.active {
+  background: #edf5f0 !important;
+  color: #246951 !important;
 }

@@ -14,11 +14,8 @@ body.medora-app:not(.cinematic-page) {
   --clinical-accent-soft: #dfece7;
   --clinical-warning: #9a6b16;
   color: var(--clinical-ink);
-  background-color: var(--clinical-paper) !important;
-  background-image: linear-gradient(rgba(31, 52, 45, 0.025) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(31, 52, 45, 0.025) 1px, transparent 1px) !important;
-  background-size: 32px 32px !important;
-  background-attachment: fixed !important;
+  background-color: #ffffff !important;
+  background-image: none !important;
 }
 
 body.medora-app .sidebar {
