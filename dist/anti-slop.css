@@ -79,6 +79,8 @@ body.medora-app .nav button.active {
 }
 
 body.medora-app .topbar {
+  position: relative !important;
+  z-index: 9999 !important;
   background: rgba(244, 245, 241, 0.94) !important;
   border-color: var(--clinical-line) !important;
   backdrop-filter: blur(10px);

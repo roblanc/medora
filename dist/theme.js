@@ -256,6 +256,7 @@
     const togglePopover = (open) => {
       const willOpen = open !== undefined ? open : !popover.classList.contains('is-open');
       popover.classList.toggle('is-open', willOpen);
+      selectEl.classList.toggle('is-open', willOpen);
       trigger.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
       popover.setAttribute('aria-hidden', willOpen ? 'false' : 'true');
     };

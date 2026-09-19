@@ -1668,10 +1668,31 @@ body.medora-app .sidebar .nav button.line-sidebar__item.active {
      </Select.Popover>
    </Select>
    ========================================================================== */
+/* ==========================================================================
+   Header & Topbar Stacking Context
+   Ensures dropdowns, popovers, and menus float strictly ABOVE content
+   ========================================================================== */
+header.topbar,
+.topbar,
+body.medora-app .topbar {
+  position: relative !important;
+  z-index: 9999 !important;
+}
+
+.topright,
+.top-actions {
+  position: relative !important;
+  z-index: 10000 !important;
+}
+
 .heroui-select {
   position: relative !important;
   display: inline-block !important;
   user-select: none !important;
+  z-index: 10001 !important;
+}
+.heroui-select.is-open {
+  z-index: 10005 !important;
 }
 .heroui-select-trigger {
   display: inline-flex !important;
@@ -1756,7 +1777,7 @@ body.medora-app .sidebar .nav button.line-sidebar__item.active {
   border-radius: 14px !important;
   box-shadow: 0 12px 36px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.05) !important;
   padding: 6px !important;
-  z-index: 1200 !important;
+  z-index: 99999 !important;
   overflow-y: auto !important;
   opacity: 0 !important;
   visibility: hidden !important;
